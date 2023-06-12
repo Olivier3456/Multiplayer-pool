@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
@@ -29,7 +30,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     
-    public async Task StartGame()
+    public async System.Threading.Tasks.Task StartGame()
     {
         var result = await _runner.StartGame(new StartGameArgs()
         {
@@ -109,6 +110,19 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log(message);
     }
+
+
+    public void SendMessageStatic(string message)
+    {
+        Rpc_StaticSendMessage(_runner, message);
+    }
+
+    [Rpc]
+    public static void Rpc_StaticSendMessage(NetworkRunner runner, string message)
+    {
+        Debug.Log(message);
+    }
+
 
 
 
