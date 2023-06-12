@@ -102,12 +102,12 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         input.Set(data);
     }
 
-   
+        
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
-    public void RPC_SendMessage([RpcTarget] PlayerRef targetPlayer)
+    public void RPC_SendMessage(string message)
     {
-        Debug.Log("Vous avez reçu un message");
+        Debug.Log(message);
     }
 
 
