@@ -5,6 +5,7 @@ public class Player : NetworkBehaviour
 {
     private NetworkCharacterControllerPrototype _cc;
 
+    
 
     private Rigidbody _rb;
 
@@ -27,8 +28,11 @@ public class Player : NetworkBehaviour
         }
     }
 
-
-
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_SendMessage([RpcTarget] PlayerRef targetPlayer)
+    {
+        Debug.Log("Vous avez reçu un message");
+    }
 
 
 }

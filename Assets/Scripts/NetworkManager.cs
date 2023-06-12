@@ -10,6 +10,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     NetworkRunner _runner;
 
+    
+
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
@@ -26,10 +28,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
        await StartGame();  // Pour commencer.
     }
 
-
+    
     public async Task StartGame()
     {
-
         var result = await _runner.StartGame(new StartGameArgs()
         {
             
@@ -100,6 +101,16 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         input.Set(data);
     }
+
+   
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_SendMessage([RpcTarget] PlayerRef targetPlayer)
+    {
+        Debug.Log("Vous avez reçu un message");
+    }
+
+
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
