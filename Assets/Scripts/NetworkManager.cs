@@ -23,7 +23,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public async void CreateOrJoinGame()
     {
-       await StartGame();
+       await StartGame();  // Pour commencer.
     }
 
 
@@ -32,6 +32,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         var result = await _runner.StartGame(new StartGameArgs()
         {
+            
             GameMode = GameMode.AutoHostOrClient,
             PlayerCount = 2
         }) ;
@@ -39,15 +40,22 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (result.Ok)
         {
             Debug.Log("Room joigned");
+
+            if (_runner.GameMode == GameMode.Host)
+            {
+                Debug.Log("Vous hébergez la partie");
+            }
+            else
+            {
+                Debug.Log(_runner.GameMode);
+            }
+
         }
         else
         {
             Debug.LogError($"Failed to Start: {result.ShutdownReason}");
         }
     }
-
-
-
 
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
@@ -59,6 +67,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
             // Keep track of the player avatars so we can remove it when they disconnect
             _spawnedCharacters.Add(player, networkPlayerObject);
+
+            Debug.Log(player.PlayerId);
         }
     }
 
@@ -72,7 +82,25 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void OnInput(NetworkRunner runner, NetworkInput input) { }
+    public void OnInput(NetworkRunner runner, NetworkInput input)
+    {
+        var data = new NetworkInputData();
+
+        if (Input.GetKey(KeyCode.W))
+            data.direction += Vector3.forward;
+
+        if (Input.GetKey(KeyCode.S))
+            data.direction += Vector3.back;
+
+        if (Input.GetKey(KeyCode.A))
+            data.direction += Vector3.left;
+
+        if (Input.GetKey(KeyCode.D))
+            data.direction += Vector3.right;
+
+        input.Set(data);
+    }
+
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
