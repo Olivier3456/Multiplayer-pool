@@ -218,6 +218,18 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
+    public void SendMessageStatic(string message)
+    {
+        Rpc_StaticSendMessage(_runner, message);
+    }
+
+    [Rpc]
+    public static void Rpc_StaticSendMessage(NetworkRunner runner, string message)
+    {
+        Debug.Log(message);
+    }
+
+
     //[Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     //public void RPC_SendMessage(string message)
     //{
