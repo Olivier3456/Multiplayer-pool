@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -33,7 +34,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Host,
             PlayerCount = 2,
-            CustomLobbyName = "MyLobby",
+            CustomLobbyName = "MyCustomLobby",
             SessionName = _sessionNameInputField.text
         }) ;
         DebugLogConnexion(result);
@@ -71,29 +72,15 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
 
         Debug.Log($"Session List Updated with {sessionList.Count} session(s)");
-
-              
-        // Store the target session
-        SessionInfo session = null;
-
+                
 
         List<String> sessionNames = new List<String>();
-
         foreach (var sessionItem in sessionList)
         {
             sessionNames.Add(sessionItem.Name);
         }
         _sessionListDropdown.AddOptions(sessionNames);
-
-
-        // Check if there is any valid session
-        if (session != null)
-        {
-            Debug.Log($"Joining {session.Name}");
-
-            // Join
-            
-        }
+                
     }
 
 
@@ -113,11 +100,12 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (_sessionListDropdown.options.Count > 0)
         {
+            Debug.Log("Session rejointe : " + _sessionListDropdown.options[_sessionListDropdown.value].text);
 
             var result = await _runner.StartGame(new StartGameArgs()
             {
                 GameMode = GameMode.Client, // Client GameMode, could be Shared as well
-                SessionName = _sessionListDropdown.value.ToString() // Session to Join                                                
+                SessionName = _sessionListDropdown.options[_sessionListDropdown.value].text // Session to Join
             });
 
             DebugLogConnexion(result);
@@ -135,22 +123,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         //DebugLogConnexion(result);
     }
 
-
-
-    public async Task StartGame()
-    {
-        var result = await _runner.StartGame(new StartGameArgs()
-        {
-            GameMode = GameMode.AutoHostOrClient,
-            PlayerCount = 2
-        });
-
-        DebugLogConnexion(result);
-    }
-
+    
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        if (runner.ActivePlayers.Count() == 2)
+
+
         if (runner.IsServer)
         {
             // Create a unique position for the player
@@ -195,27 +174,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
-    private void DebugLogConnexion(StartGameResult result)
-    {
-        if (result.Ok)
-        {
-            Debug.Log("Room joigned");
-
-            if (_runner.GameMode == GameMode.Host)
-            {
-                Debug.Log("Vous hébergez la partie");
-            }
-            else
-            {
-                Debug.Log(_runner.GameMode);
-            }
-
-        }
-        else
-        {
-            Debug.LogError($"Failed to Start: {result.ShutdownReason}");
-        }
-    }
+    
 
 
     public void SendMessageStatic(string message)
@@ -265,6 +224,31 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
 
+
+
+
+
+    private void DebugLogConnexion(StartGameResult result)
+    {
+        if (result.Ok)
+        {
+            Debug.Log("Room joigned");
+
+            if (_runner.GameMode == GameMode.Host)
+            {
+                Debug.Log("Vous hébergez la partie");
+            }
+            else
+            {
+                Debug.Log(_runner.GameMode);
+            }
+
+        }
+        else
+        {
+            Debug.LogError($"Failed to Start: {result.ShutdownReason}");
+        }
+    }
 }
 
 
