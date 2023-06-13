@@ -21,6 +21,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private NetworkSceneManagerDefault _sceneManager;
 
+    [SerializeField] private CustomSceneLoader _sceneLoader;
+
     private void Awake()
     {
         _runner = GetComponent<NetworkRunner>();
@@ -102,23 +104,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             Debug.Log("Pas de bras, pas de chocolat");
         }
-
-
-        //var result = await _runner.StartGame(new StartGameArgs()
-        //{
-        //    GameMode = GameMode.Client
-        //});
-        //DebugLogConnexion(result);
     }
 
-    [SerializeField] private CustomSceneLoader _sceneLoader;
+
 
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-       // _sceneLoader.LoadGameScene(); // Juste pour débug en local, à retirer ensuite.
-
-
         if (runner.ActivePlayers.Count() == 2)
         {
             _sceneLoader.LoadGameScene();
@@ -136,26 +128,27 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         //}
     }
 
-    int scenesLoaded = 0;
+
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        //Debug.Log("Scène chargée.");
-        //scenesLoaded++;
-        //if (scenesLoaded == 2)
-        //{
-        //    foreach (var playerConnected in runner.ActivePlayers)
-        //    {
-        //        // Create a unique position for the player
-        //        Vector3 spawnPosition = new Vector3((playerConnected.RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
-        //        NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, playerConnected);
-        //        // Keep track of the player avatars so we can remove it when they disconnect
-        //        _spawnedCharacters.Add(playerConnected, networkPlayerObject);
+        Debug.Log("Scène chargée.");
 
-        //        Debug.Log(playerConnected.PlayerId + " joined the game.");
-        //    }
+        if (runner.IsServer)
+        {
+            foreach (var playerConnected in runner.ActivePlayers)
+            {
+                // Create a unique position for the player
+                Vector3 spawnPosition = new Vector3((playerConnected.RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
+                NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, playerConnected);
+                // Keep track of the player avatars so we can remove it when they disconnect
+                _spawnedCharacters.Add(playerConnected, networkPlayerObject);
 
-        //    scenesLoaded = 0;
-        //}
+                Debug.Log(playerConnected.PlayerId + " joined the game.");
+            }
+        }
+
+
+
     }
 
 

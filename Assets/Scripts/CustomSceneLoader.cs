@@ -29,7 +29,7 @@ public class CustomSceneLoader : CustomSceneLoaderBase
 
     public void LoadGameScene()     // Méthode appelée par NetworkManager pour appeler la méthode ci-dessous, passe de la scène Lobby à la scène Game.
     {
-        Task<IEnumerable<NetworkObject>> switchScenes = SwitchScene(0,1);
+        SwitchScene(0,1);
     }
 
     protected override async Task<IEnumerable<NetworkObject>> SwitchScene(SceneRef prevScene, SceneRef newScene)
@@ -40,7 +40,7 @@ public class CustomSceneLoader : CustomSceneLoaderBase
         List<NetworkObject> sceneObjects = new List<NetworkObject>();
         if (newScene >= 0)
         {
-            var loadedScene = await LoadSceneAsset(newScene, LoadSceneMode.Additive);
+            var loadedScene = await LoadSceneAsset(newScene, LoadSceneMode.Single);
             Debug.Log($"Loaded scene {newScene}: {loadedScene}");
             sceneObjects = FindNetworkObjects(loadedScene, disable: false);
         }
