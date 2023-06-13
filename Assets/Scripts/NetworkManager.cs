@@ -5,12 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using TMPro;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     NetworkRunner _runner;
 
-    
+    [SerializeField] private TMP_InputField _sessionNameInputField;
+    [SerializeField] private TMP_Dropdown _sessionListDropdown;
 
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
@@ -22,40 +24,128 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
+     
 
-    public async void CreateOrJoinGame()
-    {
-       await StartGame();  // Pour commencer.
-    }
 
-    
-    public async Task StartGame()
+    public async void HostGame()
     {
         var result = await _runner.StartGame(new StartGameArgs()
         {
-            
-            GameMode = GameMode.AutoHostOrClient,
-            PlayerCount = 2
+            GameMode = GameMode.Host,
+            PlayerCount = 2,
+            CustomLobbyName = "MyLobby",
+            SessionName = _sessionNameInputField.text
         }) ;
+        DebugLogConnexion(result);
+    }
+
+
+    public void StartJoinLobbyTask()
+    {
+        Task t = JoinLobby();
+    }
+
+    public async Task JoinLobby()
+    {
+
+        var result = await _runner.JoinSessionLobby(SessionLobby.Custom, "MyCustomLobby");
 
         if (result.Ok)
         {
-            Debug.Log("Room joigned");
-
-            if (_runner.GameMode == GameMode.Host)
-            {
-                Debug.Log("Vous hébergez la partie");
-            }
-            else
-            {
-                Debug.Log(_runner.GameMode);
-            }
-
+            // all good
         }
         else
         {
             Debug.LogError($"Failed to Start: {result.ShutdownReason}");
         }
+
+
+        
+    }
+
+
+
+
+
+    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
+    {
+
+        Debug.Log($"Session List Updated with {sessionList.Count} session(s)");
+
+              
+        // Store the target session
+        SessionInfo session = null;
+
+
+        List<String> sessionNames = new List<String>();
+
+        foreach (var sessionItem in sessionList)
+        {
+            sessionNames.Add(sessionItem.Name);
+        }
+        _sessionListDropdown.AddOptions(sessionNames);
+
+
+        // Check if there is any valid session
+        if (session != null)
+        {
+            Debug.Log($"Joining {session.Name}");
+
+            // Join
+            
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public async void JoinGame()
+    {
+
+        if (_sessionListDropdown.options.Count > 0)
+        {
+
+            var result = await _runner.StartGame(new StartGameArgs()
+            {
+                GameMode = GameMode.Client, // Client GameMode, could be Shared as well
+                SessionName = _sessionListDropdown.value.ToString() // Session to Join                                                
+            });
+
+            DebugLogConnexion(result);
+        }
+        else
+        {
+            Debug.Log("Pas de bras, pas de chocolat");
+        }
+
+
+        //var result = await _runner.StartGame(new StartGameArgs()
+        //{
+        //    GameMode = GameMode.Client
+        //});
+        //DebugLogConnexion(result);
+    }
+
+
+
+    public async Task StartGame()
+    {
+        var result = await _runner.StartGame(new StartGameArgs()
+        {
+            GameMode = GameMode.AutoHostOrClient,
+            PlayerCount = 2
+        });
+
+        DebugLogConnexion(result);
     }
 
 
@@ -100,15 +190,51 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             data.direction += Vector3.right;
 
         input.Set(data);
+
+
     }
 
-        
 
-    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
-    public void RPC_SendMessage(string message)
+    private void DebugLogConnexion(StartGameResult result)
     {
-        Debug.Log(message);
+        if (result.Ok)
+        {
+            Debug.Log("Room joigned");
+
+            if (_runner.GameMode == GameMode.Host)
+            {
+                Debug.Log("Vous hébergez la partie");
+            }
+            else
+            {
+                Debug.Log(_runner.GameMode);
+            }
+
+        }
+        else
+        {
+            Debug.LogError($"Failed to Start: {result.ShutdownReason}");
+        }
     }
+
+
+    //[Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    //public void RPC_SendMessage(string message)
+    //{
+    //    Debug.Log(message);
+    //}
+
+    //public void SendMessageStatic(string message)
+    //{
+    //    Rpc_StaticSendMessage(_runner, message);
+    //}
+
+    //[Rpc]
+    //public static void Rpc_StaticSendMessage(NetworkRunner runner, string message)
+    //{
+    //    Debug.Log(message);
+    //}
+
 
 
 
@@ -119,7 +245,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
-    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+
+    //public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }

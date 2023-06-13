@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
-    private NetworkCharacterControllerPrototype _cc;
+    // private NetworkCharacterControllerPrototype _cc;
 
     
 
@@ -28,11 +28,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
-    public void RPC_SendMessage([RpcTarget] PlayerRef targetPlayer)
-    {
-        Debug.Log("Vous avez reçu un message");
-    }
+   
 
 
 }
