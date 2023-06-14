@@ -34,6 +34,7 @@ public class CustomSceneLoader : CustomSceneLoaderBase
     public void LoadLobbyScene()
     {
         SwitchSceneWrapper(1,0);
+        Destroy(FindAnyObjectByType<NetworkRunner>().gameObject);
     }
 
     protected override async Task<IEnumerable<NetworkObject>> SwitchScene(SceneRef prevScene, SceneRef newScene)

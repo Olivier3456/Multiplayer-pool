@@ -24,6 +24,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private CustomNetworkSceneManager _sceneManager;
 
      private CustomSceneLoader _sceneLoader;
+    private Canvas _connectionLostMessage;
 
     private void Awake()
     {
@@ -101,6 +102,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                 SceneManager = gameObject.AddComponent<CustomSceneLoader>()
             }) ;
 
+            
+
             DebugLogConnexion(result);
 
         }
@@ -166,7 +169,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             runner.Despawn(networkObject);
             _spawnedCharacters.Remove(player);
-            _opponentLeftMessage = GameObject.FindObjectOfType<Canvas>(true);
+            _opponentLeftMessage = GameObject.FindObjectsOfType<Canvas>(true).Where( go => go.name == "ClientDisconnectedCanvas").First();
             _opponentLeftMessage.gameObject.SetActive(true);
             _opponentLeftMessage.GetComponentInChildren<Button>().onClick.AddListener(_sceneLoader.LoadLobbyScene);
         }
@@ -228,8 +231,11 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner) 
     {
-            
-    
+        Debug.Log("connection lost");
+        _connectionLostMessage = GameObject.FindObjectsOfType<Canvas>(true).Where(go => go.name == "ClientLostConnectionCanvas").First();
+        _connectionLostMessage.gameObject.SetActive(true);
+        _connectionLostMessage.GetComponentInChildren<Button>().onClick.AddListener(_sceneLoader.LoadLobbyScene);
+
     }
 
 
