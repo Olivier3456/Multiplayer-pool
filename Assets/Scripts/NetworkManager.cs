@@ -77,6 +77,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log($"Session List Updated with {sessionList.Count} session(s)");
 
+        _sessionListDropdown.ClearOptions();
+
         List<String> sessionNames = new List<String>();
         foreach (var sessionItem in sessionList)
         {
@@ -230,6 +232,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     //    Debug.Log(message);
     //}
 
+    public void DestroyNetworkRunnerAndReloadMenuScene()
+    {
+        Destroy(GetComponent<NetworkRunner>());
+        SceneManager.LoadScene(0);
+    }
+
+
     public void OnDisconnectedFromServer(NetworkRunner runner) 
     {
         Debug.Log("connection lost");
@@ -239,7 +248,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         _connectionLostMessage.GetComponentInChildren<Button>().onClick.AddListener(() =>
         {
             SceneManager.LoadScene(0);
-
         });
     }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
