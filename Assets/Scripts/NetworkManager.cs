@@ -251,16 +251,18 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         });
     }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
-    { 
-        Debug.Log("shut"); 
-        _connectionLostMessage = GameObject.FindObjectsOfType<Canvas>(true).Where(go => go.name == "ClientLostConnectionCanvas").First();
-        _connectionLostMessage.gameObject.SetActive(true);
-        _connectionLostMessage.GetComponentInChildren<Button>().onClick.RemoveAllListeners();
-        _connectionLostMessage.GetComponentInChildren<Button>().onClick.AddListener(() =>
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            SceneManager.LoadScene(0);
-
-        });
+            Debug.Log("shut");
+            _connectionLostMessage = GameObject.FindObjectsOfType<Canvas>(true).Where(go => go.name == "ClientLostConnectionCanvas").First();
+            _connectionLostMessage.gameObject.SetActive(true);
+            _connectionLostMessage.GetComponentInChildren<Button>().onClick.RemoveAllListeners();
+            _connectionLostMessage.GetComponentInChildren<Button>().onClick.AddListener(() =>
+            {
+                SceneManager.LoadScene(0);
+            });
+        }
     }
 
 
