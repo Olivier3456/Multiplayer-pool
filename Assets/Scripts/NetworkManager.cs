@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
 using System.Linq;
-using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -19,7 +18,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
-    private NetworkSceneManagerDefault _sceneManager;
+    private CustomNetworkSceneManager _sceneManager;
 
     [SerializeField] private CustomSceneLoader _sceneLoader;
 
@@ -28,7 +27,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         _runner = GetComponent<NetworkRunner>();
         DontDestroyOnLoad(gameObject);
 
-        _sceneManager = GetComponent<NetworkSceneManagerDefault>();
+        
     }
 
 
@@ -95,8 +94,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             {
                 GameMode = GameMode.Client, // Client GameMode, could be Shared as well
                 SessionName = _sessionListDropdown.options[_sessionListDropdown.value].text, // Session to Join
-                SceneManager = _sceneManager
-            });
+                SceneManager = gameObject.AddComponent<CustomSceneLoader>()
+            }) ;
 
             DebugLogConnexion(result);
         }
