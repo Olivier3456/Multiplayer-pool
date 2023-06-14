@@ -171,6 +171,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             _spawnedCharacters.Remove(player);
             _opponentLeftMessage = GameObject.FindObjectsOfType<Canvas>(true).Where( go => go.name == "ClientDisconnectedCanvas").First();
             _opponentLeftMessage.gameObject.SetActive(true);
+            _opponentLeftMessage.GetComponentInChildren<Button>().onClick.RemoveAllListeners();
             _opponentLeftMessage.GetComponentInChildren<Button>().onClick.AddListener(_sceneLoader.LoadLobbyScene);
         }
     }
@@ -234,14 +235,29 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log("connection lost");
         _connectionLostMessage = GameObject.FindObjectsOfType<Canvas>(true).Where(go => go.name == "ClientLostConnectionCanvas").First();
         _connectionLostMessage.gameObject.SetActive(true);
-        _connectionLostMessage.GetComponentInChildren<Button>().onClick.AddListener(_sceneLoader.LoadLobbyScene);
+        _connectionLostMessage.GetComponentInChildren<Button>().onClick.RemoveAllListeners();
+        _connectionLostMessage.GetComponentInChildren<Button>().onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene(0);
 
+        });
+    }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    { 
+        Debug.Log("shut"); 
+        _connectionLostMessage = GameObject.FindObjectsOfType<Canvas>(true).Where(go => go.name == "ClientLostConnectionCanvas").First();
+        _connectionLostMessage.gameObject.SetActive(true);
+        _connectionLostMessage.GetComponentInChildren<Button>().onClick.RemoveAllListeners();
+        _connectionLostMessage.GetComponentInChildren<Button>().onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene(0);
+
+        });
     }
 
 
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }

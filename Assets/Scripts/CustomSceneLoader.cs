@@ -33,6 +33,7 @@ public class CustomSceneLoader : CustomSceneLoaderBase
     }
     public void LoadLobbyScene()
     {
+        Debug.Log("switching scene");
         SwitchSceneWrapper(1,0);
         Destroy(FindAnyObjectByType<NetworkRunner>().gameObject);
     }
