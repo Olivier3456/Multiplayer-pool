@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -14,13 +16,14 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     [SerializeField] private TMP_InputField _sessionNameInputField;
     [SerializeField] private TMP_Dropdown _sessionListDropdown;
+    private Canvas _opponentLeftMessage;
 
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
     private CustomNetworkSceneManager _sceneManager;
 
-    [SerializeField] private CustomSceneLoader _sceneLoader;
+     private CustomSceneLoader _sceneLoader;
 
     private void Awake()
     {
@@ -41,7 +44,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             GameMode = GameMode.Host,
             PlayerCount = 2,
             CustomLobbyName = "MyCustomLobby",
-            SessionName = _sessionNameInputField.text
+            SessionName = _sessionNameInputField.text,
+            SceneManager = gameObject.AddComponent<CustomSceneLoader>()
         });
         DebugLogConnexion(result);
     }
@@ -98,6 +102,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             }) ;
 
             DebugLogConnexion(result);
+
         }
         else
         {
@@ -110,6 +115,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        _sceneLoader = GetComponent<CustomSceneLoader>();
+
         if (runner.ActivePlayers.Count() == 2)
         {
             _sceneLoader.LoadGameScene();
@@ -132,7 +139,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log("Scène chargée.");
 
-        if (runner.IsServer)
+        if (runner.IsServer && SceneManager.GetActiveScene().buildIndex == 1)
         {
             foreach (var playerConnected in runner.ActivePlayers)
             {
@@ -159,6 +166,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             runner.Despawn(networkObject);
             _spawnedCharacters.Remove(player);
+            _opponentLeftMessage = GameObject.FindObjectOfType<Canvas>(true);
+            _opponentLeftMessage.gameObject.SetActive(true);
+            _opponentLeftMessage.GetComponentInChildren<Button>().onClick.AddListener(_sceneLoader.LoadLobbyScene);
         }
     }
 
@@ -216,13 +226,17 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     //    Debug.Log(message);
     //}
 
+    public void OnDisconnectedFromServer(NetworkRunner runner) 
+    {
+            
+    
+    }
 
 
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
-    public void OnDisconnectedFromServer(NetworkRunner runner) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }

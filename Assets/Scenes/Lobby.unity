@@ -4247,7 +4247,6 @@ GameObject:
   - component: {fileID: 1695764789}
   - component: {fileID: 1695764788}
   - component: {fileID: 1695764791}
-  - component: {fileID: 1695764792}
   m_Layer: 0
   m_Name: Network Manager
   m_TagString: Untagged
@@ -4283,7 +4282,6 @@ MonoBehaviour:
   _sessionListDropdown: {fileID: 787948285}
   _playerPrefab:
     RawGuidValue: 398e21b536088b941b51fa88d94f76ee
-  _sceneLoader: {fileID: 1695764792}
 --- !u!4 &1695764790
 Transform:
   m_ObjectHideFlags: 0
@@ -4311,19 +4309,6 @@ MonoBehaviour:
   m_Script: {fileID: 1032120742, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1695764792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1695764787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00ab2a03a62dd764687f3c8cf71317d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowHierarchyWindowOverlay: 1
 --- !u!1 &1954665519
 GameObject:
   m_ObjectHideFlags: 0

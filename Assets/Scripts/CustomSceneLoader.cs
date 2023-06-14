@@ -29,7 +29,11 @@ public class CustomSceneLoader : CustomSceneLoaderBase
 
     public void LoadGameScene()     // Méthode appelée par NetworkManager pour appeler la méthode ci-dessous, passe de la scène Lobby à la scène Game.
     {
-        SwitchScene(0,1);
+        SwitchSceneWrapper(0,1);
+    }
+    public void LoadLobbyScene()
+    {
+        SwitchSceneWrapper(1,0);
     }
 
     protected override async Task<IEnumerable<NetworkObject>> SwitchScene(SceneRef prevScene, SceneRef newScene)

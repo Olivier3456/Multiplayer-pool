@@ -232,7 +232,7 @@ public abstract class CustomSceneLoaderBase : Fusion.Behaviour, INetworkSceneMan
         Log.Warn($"[NetworkSceneManager] {(this != null ? this.name : "<destroyed>")}: {msg}");
     }
 
-    private async Task SwitchSceneWrapper(SceneRef prevScene, SceneRef newScene)
+    public async Task SwitchSceneWrapper(SceneRef prevScene, SceneRef newScene)
     {
         IEnumerable<NetworkObject> sceneObjects;
         Exception error = null;
