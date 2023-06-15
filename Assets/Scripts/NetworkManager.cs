@@ -190,24 +190,27 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         var data = new NetworkInputData();
 
-
-        if (networkPlayerObject.GetComponent<Player>().CanPlay)
+        if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            if (Input.GetKey(KeyCode.UpArrow))
-                data.direction += Vector3.forward;
 
-            if (Input.GetKey(KeyCode.DownArrow))
-                data.direction += Vector3.back;
+            if (networkPlayerObject.GetComponent<Player>().CanPlay)
+            {
+                if (Input.GetKey(KeyCode.UpArrow))
+                    data.direction += Vector3.forward;
 
-            if (Input.GetKey(KeyCode.LeftArrow))
-                data.direction += Vector3.left;
+                if (Input.GetKey(KeyCode.DownArrow))
+                    data.direction += Vector3.back;
 
-            if (Input.GetKey(KeyCode.RightArrow))
-                data.direction += Vector3.right;
+                if (Input.GetKey(KeyCode.LeftArrow))
+                    data.direction += Vector3.left;
+
+                if (Input.GetKey(KeyCode.RightArrow))
+                    data.direction += Vector3.right;
+            }
+
+            if (Input.GetKeyDown(KeyCode.M)) networkPlayerObject.GetComponent<Player>().NextPlayerTurn();
+
         }
-
-       if (Input.GetKeyDown(KeyCode.M)) networkPlayerObject.GetComponent<Player>().NextPlayerTurn();
-
         input.Set(data);
     }
 

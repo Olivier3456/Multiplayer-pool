@@ -5080,6 +5080,12 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!4 &1421176835 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7629820275437031930, guid: 398e21b536088b941b51fa88d94f76ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 1006371292}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1447822455
 GameObject:
   m_ObjectHideFlags: 0
@@ -6778,7 +6784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d354d58fb74aaf347b3b53327ef31178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 1421176835}
   rotationSpeed: 5
 --- !u!1 &1908610082
 GameObject:
