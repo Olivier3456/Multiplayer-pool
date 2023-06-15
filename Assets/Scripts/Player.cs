@@ -26,6 +26,9 @@ public class Player : NetworkBehaviour
 
             _rb.AddForce(data.direction);
         }
+
+
+      
     }
 
    

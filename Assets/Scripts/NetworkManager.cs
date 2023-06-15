@@ -55,6 +55,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         else playerTurn = 1;
     }
 
+
+
    
     public async void HostGame()
     {
@@ -214,6 +216,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (Input.GetKey(KeyCode.RightArrow))
             data.direction += Vector3.right;
+
+        if (Input.GetKey(KeyCode.M)) NextPlayerTurn();
 
         input.Set(data);
 
