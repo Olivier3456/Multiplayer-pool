@@ -163,7 +163,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
                 // Create a unique position for the player
 
-                Vector3 spawnPosition = new Vector3((runner.ActivePlayers.First().RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
+                Vector3 spawnPosition = new Vector3(33f, 4.7f, 5.2f);
                 networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
 
 

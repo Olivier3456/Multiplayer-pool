@@ -11,7 +11,7 @@ public class CameraRotation : MonoBehaviour
     void Start()
     {
         // Calcul de l'offset initial entre la caméra et l'objet
-        offset = transform.position - target.position;
+       
         Cursor.visible = false;
 
 
@@ -22,6 +22,7 @@ public class CameraRotation : MonoBehaviour
         if (target == null)
         {
             target = FindAnyObjectByType<Player>().transform;
+            if (target == null) offset = transform.position - target.position;
         }
         else
         {
