@@ -9,6 +9,7 @@ using TMPro;
 using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.PlasticSCM.Editor.WebApi;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -35,9 +36,26 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
+    public static int playerId = 1;
 
 
+    [Networked(OnChanged = nameof(OnBallSpawned))]
+    public static int playerTurn { get; set; }
 
+    public static void OnBallSpawned(Changed<Player> changed)
+    {
+        if (playerId == playerTurn) Debug.Log("Its your turn");
+        else Debug.Log("Its not your turn");
+       
+    }
+
+    public void NextPlayerTurn()
+    {
+        if (playerTurn == 1) playerTurn = 2;
+        else playerTurn = 1;
+    }
+
+   
     public async void HostGame()
     {
         var result = await _runner.StartGame(new StartGameArgs()
@@ -49,6 +67,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             SceneManager = gameObject.AddComponent<CustomSceneLoader>()
         });
         DebugLogConnexion(result);
+
+        playerId = 1;
     }
 
 
@@ -107,6 +127,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             
 
             DebugLogConnexion(result);
+            playerId = 2;
 
         }
         else
