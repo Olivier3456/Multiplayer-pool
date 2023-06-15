@@ -6,22 +6,21 @@ public class Player : NetworkBehaviour
 {
     // private NetworkCharacterControllerPrototype _cc;
 
-    public static int playerId;
+    static NetworkRunner _nr;
 
-    [Networked(OnChanged = nameof(OnBallSpawned))]
-    public int playerTurn { get; set; }
+    [Networked(OnChanged = nameof(OnTurnChange))]
+    public bool IsHostTurn { get; set; }
 
-    public static void OnBallSpawned(Changed<Player> changed)
+    public static void OnTurnChange(Changed<Player> changed)
     {
-        if (playerId == changed.Get<Player>().playerTurn) Debug.Log("Its your turn");
+        if ( _nr.IsServer == changed.Behaviour.IsHostTurn) Debug.Log("Its your turn");
         else Debug.Log("Its not your turn");
 
     }
 
     public void NextPlayerTurn()
     {
-        if (playerTurn == 1) playerTurn = 2;
-        else playerTurn = 1;
+        IsHostTurn = !IsHostTurn;
     }
 
     
@@ -36,6 +35,7 @@ public class Player : NetworkBehaviour
       //  _cc = GetComponent<NetworkCharacterControllerPrototype>();
 
         _rb = GetComponent<Rigidbody>();
+        _nr = FindAnyObjectByType<NetworkRunner>();
     }
 
 

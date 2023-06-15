@@ -13,7 +13,7 @@ using Unity.PlasticSCM.Editor.WebApi;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
-    NetworkRunner _runner;
+    static NetworkRunner _runner;
 
     [SerializeField] private TMP_InputField _sessionNameInputField;
     [SerializeField] private TMP_Dropdown _sessionListDropdown;
@@ -58,7 +58,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         });
         DebugLogConnexion(result);
 
-        Player.playerId = 1;
     }
 
 
@@ -117,7 +116,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             
 
             DebugLogConnexion(result);
-            Player.playerId = 2;
 
         }
         else
@@ -200,7 +198,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKey(KeyCode.RightArrow))
             data.direction += Vector3.right;
 
-        if (Input.GetKey(KeyCode.M)) FindObjectOfType<Player>().NextPlayerTurn();
+        if (Input.GetKeyDown(KeyCode.M)) FindObjectOfType<Player>().NextPlayerTurn();
 
         input.Set(data);
     }
