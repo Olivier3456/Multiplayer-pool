@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon.StructWrapping;
 using Fusion;
 using UnityEngine;
 
@@ -8,11 +9,11 @@ public class Player : NetworkBehaviour
     public static int playerId;
 
     [Networked(OnChanged = nameof(OnBallSpawned))]
-    public static int playerTurn { get; set; }
+    public int playerTurn { get; set; }
 
     public static void OnBallSpawned(Changed<Player> changed)
     {
-        if (playerId == playerTurn) Debug.Log("Its your turn");
+        if (playerId == changed.Get<Player>().playerTurn) Debug.Log("Its your turn");
         else Debug.Log("Its not your turn");
 
     }
