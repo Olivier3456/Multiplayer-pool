@@ -24,28 +24,29 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private CustomNetworkSceneManager _sceneManager;
 
-     private CustomSceneLoader _sceneLoader;
+    private CustomSceneLoader _sceneLoader;
     private Canvas _connectionLostMessage;
+    NetworkObject networkPlayerObject;
 
-    
+
 
     private void Awake()
     {
         _runner = GetComponent<NetworkRunner>();
         DontDestroyOnLoad(gameObject);
 
-        
+
     }
 
 
-    
-
-
-    
 
 
 
-   
+
+
+
+
+
     public async void HostGame()
     {
         var result = await _runner.StartGame(new StartGameArgs()
@@ -111,9 +112,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                 GameMode = GameMode.Client, // Client GameMode, could be Shared as well
                 SessionName = _sessionListDropdown.options[_sessionListDropdown.value].text, // Session to Join
                 SceneManager = gameObject.AddComponent<CustomSceneLoader>()
-            }) ;
+            });
 
-            
+
 
             DebugLogConnexion(result);
 
@@ -155,15 +156,18 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (runner.IsServer && SceneManager.GetActiveScene().buildIndex == 1)
         {
-            
-                // Create a unique position for the player
-                Vector3 spawnPosition = new Vector3((runner.ActivePlayers.First().RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
-                NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
-                // Keep track of the player avatars so we can remove it when they disconnect
-                _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObject);
 
-                Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
-            
+            // Create a unique position for the player
+            // Vector3 spawnPosition = new Vector3((runner.ActivePlayers.First().RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
+            // NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
+
+             networkPlayerObject = GameObject.Find("Notre Player Prefab").GetComponent<NetworkObject>();
+
+            // Keep track of the player avatars so we can remove it when they disconnect
+            _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObject);
+
+            Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
+
         }
     }
 
@@ -175,7 +179,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             runner.Despawn(networkObject);
             _spawnedCharacters.Remove(player);
-            _opponentLeftMessage = GameObject.FindObjectsOfType<Canvas>(true).Where( go => go.name == "ClientDisconnectedCanvas").First();
+            _opponentLeftMessage = GameObject.FindObjectsOfType<Canvas>(true).Where(go => go.name == "ClientDisconnectedCanvas").First();
             _opponentLeftMessage.gameObject.SetActive(true);
             _opponentLeftMessage.GetComponentInChildren<Button>().onClick.RemoveAllListeners();
             _opponentLeftMessage.GetComponentInChildren<Button>().onClick.AddListener(_sceneLoader.LoadLobbyScene);
@@ -186,19 +190,23 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         var data = new NetworkInputData();
 
-        if (Input.GetKey(KeyCode.UpArrow))
-            data.direction += Vector3.forward;
 
-        if (Input.GetKey(KeyCode.DownArrow))
-            data.direction += Vector3.back;
+        if (networkPlayerObject.GetComponent<Player>().CanPlay)
+        {
+            if (Input.GetKey(KeyCode.UpArrow))
+                data.direction += Vector3.forward;
 
-        if (Input.GetKey(KeyCode.LeftArrow))
-            data.direction += Vector3.left;
+            if (Input.GetKey(KeyCode.DownArrow))
+                data.direction += Vector3.back;
 
-        if (Input.GetKey(KeyCode.RightArrow))
-            data.direction += Vector3.right;
+            if (Input.GetKey(KeyCode.LeftArrow))
+                data.direction += Vector3.left;
 
-        if (Input.GetKeyDown(KeyCode.M)) FindObjectOfType<Player>().NextPlayerTurn();
+            if (Input.GetKey(KeyCode.RightArrow))
+                data.direction += Vector3.right;
+        }
+
+       if (Input.GetKeyDown(KeyCode.M)) networkPlayerObject.GetComponent<Player>().NextPlayerTurn();
 
         input.Set(data);
     }
@@ -243,7 +251,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
-    public void OnDisconnectedFromServer(NetworkRunner runner) 
+    public void OnDisconnectedFromServer(NetworkRunner runner)
     {
         Debug.Log("connection lost");
         _connectionLostMessage = GameObject.FindObjectsOfType<Canvas>(true).Where(go => go.name == "ClientLostConnectionCanvas").First();
