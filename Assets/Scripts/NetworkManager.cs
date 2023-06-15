@@ -158,15 +158,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log("Scène chargée.");
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            networkPlayerObject = GameObject.Find("Notre Player Prefab").GetComponent<NetworkObject>();
-
-
             if (runner.IsServer)
             {
 
                 // Create a unique position for the player
-                // Vector3 spawnPosition = new Vector3((runner.ActivePlayers.First().RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
-                // NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
+
+                Vector3 spawnPosition = new Vector3((runner.ActivePlayers.First().RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
+                networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
 
 
                 // Keep track of the player avatars so we can remove it when they disconnect
@@ -174,6 +172,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
                 Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
 
+            }
+            else
+            {
+                networkPlayerObject = GameObject.Find("Notre Player Prefab").GetComponent<NetworkObject>();
             }
         }
     }
