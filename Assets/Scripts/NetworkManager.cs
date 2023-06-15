@@ -156,21 +156,25 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSceneLoadDone(NetworkRunner runner)
     {
         Debug.Log("Scène chargée.");
-
-        if (runner.IsServer && SceneManager.GetActiveScene().buildIndex == 1)
+        if (SceneManager.GetActiveScene().buildIndex == 1)
         {
+            networkPlayerObject = GameObject.Find("Notre Player Prefab").GetComponent<NetworkObject>();
 
-            // Create a unique position for the player
-            // Vector3 spawnPosition = new Vector3((runner.ActivePlayers.First().RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
-            // NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
 
-             networkPlayerObject = GameObject.Find("Notre Player Prefab").GetComponent<NetworkObject>();
+            if (runner.IsServer)
+            {
 
-            // Keep track of the player avatars so we can remove it when they disconnect
-            _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObject);
+                // Create a unique position for the player
+                // Vector3 spawnPosition = new Vector3((runner.ActivePlayers.First().RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
+                // NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
 
-            Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
 
+                // Keep track of the player avatars so we can remove it when they disconnect
+                _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObject);
+
+                Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
+
+            }
         }
     }
 
