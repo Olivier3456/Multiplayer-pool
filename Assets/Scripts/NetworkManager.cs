@@ -28,6 +28,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private Canvas _connectionLostMessage;
     NetworkObject networkPlayerObject;
 
+    public bool IsHostTurn = true;
+
+
 
 
     private void Awake()
@@ -193,7 +196,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
 
-            if (networkPlayerObject.GetComponent<Player>().CanPlay)
+            if ((networkPlayerObject.GetComponent<Player>().IsHostTurn && runner.IsServer)
+                || (!networkPlayerObject.GetComponent<Player>().IsHostTurn && runner.IsClient))
             {
                 if (Input.GetKey(KeyCode.UpArrow))
                     data.direction += Vector3.forward;

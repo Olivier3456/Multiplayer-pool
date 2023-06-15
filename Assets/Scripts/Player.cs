@@ -8,18 +8,21 @@ public class Player : NetworkBehaviour
 
     static NetworkRunner _nr;
 
-    public bool CanPlay;
 
-    [Networked(OnChanged = nameof(OnTurnChange))]
+    
+    [Networked]
     public bool IsHostTurn { get; set; }
 
-    public static void OnTurnChange(Changed<Player> changed)
+
+    private void Start()
+    {
+    }
+
+    /*public static void OnTurnChange(Changed<Player> changed)
     {
         if (_nr.IsServer == changed.Behaviour.IsHostTurn) changed.Behaviour.CanPlay = true;
         else changed.Behaviour.CanPlay = false;
-
-
-    }
+    }*/
 
     public void NextPlayerTurn()
     {
