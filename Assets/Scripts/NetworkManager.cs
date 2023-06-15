@@ -27,6 +27,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
      private CustomSceneLoader _sceneLoader;
     private Canvas _connectionLostMessage;
 
+    
+
     private void Awake()
     {
         _runner = GetComponent<NetworkRunner>();
@@ -36,24 +38,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
-    public static int playerId = 1;
+    
 
 
-    [Networked(OnChanged = nameof(OnBallSpawned))]
-    public static int playerTurn { get; set; }
-
-    public static void OnBallSpawned(Changed<Player> changed)
-    {
-        if (playerId == playerTurn) Debug.Log("Its your turn");
-        else Debug.Log("Its not your turn");
-       
-    }
-
-    public void NextPlayerTurn()
-    {
-        if (playerTurn == 1) playerTurn = 2;
-        else playerTurn = 1;
-    }
+    
 
 
 
@@ -70,7 +58,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         });
         DebugLogConnexion(result);
 
-        playerId = 1;
+        Player.playerId = 1;
     }
 
 
@@ -129,7 +117,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             
 
             DebugLogConnexion(result);
-            playerId = 2;
+            Player.playerId = 2;
 
         }
         else
@@ -169,22 +157,17 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (runner.IsServer && SceneManager.GetActiveScene().buildIndex == 1)
         {
-            foreach (var playerConnected in runner.ActivePlayers)
-            {
+            
                 // Create a unique position for the player
-                Vector3 spawnPosition = new Vector3((playerConnected.RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
-                NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, playerConnected);
+                Vector3 spawnPosition = new Vector3((runner.ActivePlayers.First().RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
+                NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
                 // Keep track of the player avatars so we can remove it when they disconnect
-                _spawnedCharacters.Add(playerConnected, networkPlayerObject);
+                _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObject);
 
-                Debug.Log(playerConnected.PlayerId + " joined the game.");
-            }
+                Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
+            
         }
-
-
-
     }
-
 
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -217,11 +200,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKey(KeyCode.RightArrow))
             data.direction += Vector3.right;
 
-        if (Input.GetKey(KeyCode.M)) NextPlayerTurn();
+        if (Input.GetKey(KeyCode.M)) FindObjectOfType<Player>().NextPlayerTurn();
 
         input.Set(data);
-
-
     }
 
 
