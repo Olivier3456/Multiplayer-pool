@@ -138,7 +138,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                 // Keep track of the player avatars so we can remove it when they disconnect
                 _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObjects[0]);
                 _spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
-        
+
                 Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
                 _camera = Camera.main;
             }
