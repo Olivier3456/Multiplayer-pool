@@ -26,11 +26,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private CustomSceneLoader _sceneLoader;
     private Canvas _connectionLostMessage;
-    NetworkObject networkPlayerObject;
+    NetworkObject[] networkPlayerObjects;
 
     Player playableBall;
-
-    public bool IsHostTurn = true;
 
 
     private void Awake()
@@ -133,10 +131,12 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             {
                 // Create a unique position for the player
                 Vector3 spawnPosition = new Vector3(33f, 4.7f, 5.2f);
-                networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
+                networkPlayerObjects[0] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
+                networkPlayerObjects[1] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.Last());
                 // Keep track of the player avatars so we can remove it when they disconnect
-                _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObject);
-
+                _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObjects[0]);
+                _spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
+        
                 Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
             }
             else
@@ -151,8 +151,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     IEnumerator WaitForPlayerToSpawn()
     {
         yield return new WaitForSeconds(2);
-        playableBall = FindAnyObjectByType<Player>();
-        networkPlayerObject = playableBall.gameObject.GetComponent<NetworkObject>();
+        //playableBall = FindAnyObjectByType<Player>();
+        networkPlayerObjects = FindObjectsByType<NetworkObject>(FindObjectsSortMode.None);
     }
 
 
@@ -172,10 +172,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+        Debug.Log("there was an input");
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            if (playableBall != null)
+            Debug.Log("correct scene");
+            if (networkPlayerObjects != null)
             {
+                Debug.Log("playableBall is not null");
                 if ((Player.IsHostTurn && runner.IsServer)
                 || (!Player.IsHostTurn && runner.IsClient))
                 {
@@ -194,9 +197,11 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                         data.direction += Vector3.right;
 
                     if (Input.GetKeyDown(KeyCode.Return))
-                        playableBall.NextPlayerTurn();
+                        Player.IsHostTurn = !Player.IsHostTurn;
 
                     input.Set(data);
+                    
+                Debug.Log("data sent " + data);
                 }
             }
         }

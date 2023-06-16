@@ -8,10 +8,12 @@ public class Player : NetworkBehaviour
     //public bool IsHostTurn { get; set; }
 
     private Rigidbody _rb;
+    private static Player[] balls;
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody>();        
+        _rb = GetComponent<Rigidbody>();
+        balls = FindObjectsByType<Player>(FindObjectsSortMode.None);
     }
 
 
@@ -22,11 +24,12 @@ public class Player : NetworkBehaviour
 
     protected static void SwitchTurn(Changed<Player> changed)
     {
-        changed.LoadNew();
-        IsHostTurn = changed.Behaviour.MyProperty;
-        changed.LoadOld();
-        var oldval = changed.Behaviour.MyProperty;
-        Debug.Log($"IsHostTurn changed from {oldval} to {IsHostTurn}");
+        //changed.LoadNew();
+        //IsHostTurn = changed.Behaviour.MyProperty;
+        //changed.LoadOld();
+        //var oldval = changed.Behaviour.MyProperty;
+        //Debug.Log($"IsHostTurn changed from {oldval} to {IsHostTurn}");
+        NextPlayerTurn();
     }
 
 
@@ -40,9 +43,23 @@ public class Player : NetworkBehaviour
     }*/
 
 
-    public void NextPlayerTurn()
+    public static void NextPlayerTurn()
     {
+        if (IsHostTurn)
+        {
+            balls[1].transform.position = balls[0].transform.position;
+            balls[1].gameObject.SetActive(true);
+            balls[0].gameObject.SetActive(false);
+        }
+        else
+        {
+            balls[0].transform.position = balls[1].transform.position;
+            balls[0].gameObject.SetActive(true);
+            balls[1].gameObject.SetActive(false);
+
+        }
         IsHostTurn = !IsHostTurn;
+
     }
 
 
