@@ -18,6 +18,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private TMP_InputField _sessionNameInputField;
     [SerializeField] private TMP_Dropdown _sessionListDropdown;
     private Canvas _opponentLeftMessage;
+    
 
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
@@ -29,7 +30,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     NetworkObject[] networkPlayerObjects = new NetworkObject[2];
 
     Player playableBall;
-
+    private Camera _camera;
 
     private void Awake()
     {
@@ -139,11 +140,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                 _spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
         
                 Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
+                _camera = Camera.main;
             }
             else
             {
                 // La balle a-t-elle eu le temps d'être spawnée quand cette méthode s'exécute chez le client ? Mettons un délai pour voir :
                 StartCoroutine(WaitForPlayerToSpawn());
+                _camera = Camera.main;
             }
         }
     }
@@ -186,16 +189,16 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                     var data = new NetworkInputData();
 
                     if (Input.GetKey(KeyCode.UpArrow))
-                        data.direction += Vector3.forward;
+                        data.direction += _camera.transform.forward;
 
                     if (Input.GetKey(KeyCode.DownArrow))
-                        data.direction += Vector3.back;
+                        data.direction -= _camera.transform.forward;
 
                     if (Input.GetKey(KeyCode.LeftArrow))
-                        data.direction += Vector3.left;
+                        data.direction -= _camera.transform.right;
 
                     if (Input.GetKey(KeyCode.RightArrow))
-                        data.direction += Vector3.right;
+                        data.direction += _camera.transform.right;
 
                     if (Input.GetKeyDown(KeyCode.Return))
                         Player.IsHostTurn = !Player.IsHostTurn;
