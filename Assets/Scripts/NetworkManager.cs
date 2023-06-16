@@ -203,7 +203,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
                         //Player.IsHostTurn = !Player.IsHostTurn;
-                        networkPlayerObjects[0].AssignInputAuthority(runner.ActivePlayers.Last());
+                        if(networkPlayerObjects[0].InputAuthority == runner.ActivePlayers.First())
+                            networkPlayerObjects[0].AssignInputAuthority(runner.ActivePlayers.Last());
+                        else
+                            networkPlayerObjects[0].AssignInputAuthority(runner.ActivePlayers.First());
                     }
 
                     input.Set(data);
