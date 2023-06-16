@@ -22,18 +22,14 @@ public class CameraRotation : MonoBehaviour
         if (target == null)
         {
             target = FindAnyObjectByType<Player>().transform;
-            if (target == null) offset = transform.position - target.position;
+            if (target != null) offset = transform.position - target.position;
         }
         else
         {
-
             // Obtention des mouvements de la souris
             float horizontal = Input.GetAxis("Mouse X") * rotationSpeed;
             float vertical = Input.GetAxis("Mouse Y") * rotationSpeed;
-
-            // Rotation de la caméra autour de l'objet en fonction des mouvements de la souris
-            //target.Rotate(0, horizontal, 0);
-            //transform.Rotate(-vertical, 0, 0);
+                        
 
             // Mise à jour de la position de la caméra en fonction de la rotation
             desiredHorizontalAngle += horizontal;

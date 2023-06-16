@@ -6,7 +6,7 @@ public class Player : NetworkBehaviour
 {
     // private NetworkCharacterControllerPrototype _cc;
 
-    static NetworkRunner _nr;
+    // static NetworkRunner _nr;
 
 
     
@@ -14,9 +14,7 @@ public class Player : NetworkBehaviour
     public bool IsHostTurn { get; set; }
 
 
-    private void Start()
-    {
-    }
+   
 
     /*public static void OnTurnChange(Changed<Player> changed)
     {
@@ -41,7 +39,7 @@ public class Player : NetworkBehaviour
       //  _cc = GetComponent<NetworkCharacterControllerPrototype>();
 
         _rb = GetComponent<Rigidbody>();
-        _nr = FindAnyObjectByType<NetworkRunner>();
+      //  _nr = FindAnyObjectByType<NetworkRunner>();
     }
 
 
@@ -54,9 +52,6 @@ public class Player : NetworkBehaviour
 
             _rb.AddForce(data.direction);
         }
-
-
-      
     }
 
    

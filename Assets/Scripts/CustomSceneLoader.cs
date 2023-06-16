@@ -14,7 +14,6 @@ public class CustomSceneLoader : CustomSceneLoaderBase
     {
         if (Runner.SceneManager() && Runner.SceneManager().Object)
         {
-
             Runner.SceneManager().UnloadOutdatedScenes();
 
             return Runner.SceneManager().IsSceneUpdated(out _desiredScene);

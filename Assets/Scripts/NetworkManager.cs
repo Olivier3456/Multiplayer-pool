@@ -28,26 +28,16 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private Canvas _connectionLostMessage;
     NetworkObject networkPlayerObject;
 
+    Player playableBall;
+
     public bool IsHostTurn = true;
-
-
 
 
     private void Awake()
     {
         _runner = GetComponent<NetworkRunner>();
         DontDestroyOnLoad(gameObject);
-
-
     }
-
-
-
-
-
-
-
-
 
 
     public async void HostGame()
@@ -61,7 +51,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             SceneManager = gameObject.AddComponent<CustomSceneLoader>()
         });
         DebugLogConnexion(result);
-
     }
 
 
@@ -69,6 +58,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Task t = JoinLobby();
     }
+
 
     public async Task JoinLobby()
     {
@@ -83,7 +73,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             Debug.LogError($"Failed to Start: {result.ShutdownReason}");
         }
     }
-
 
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
@@ -101,9 +90,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
-
-
-
     public async void JoinGame()
     {
         if (_sessionListDropdown.options.Count > 0)
@@ -117,8 +103,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                 SceneManager = gameObject.AddComponent<CustomSceneLoader>()
             });
 
-
-
             DebugLogConnexion(result);
 
         }
@@ -129,8 +113,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
-
-
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         _sceneLoader = GetComponent<CustomSceneLoader>();
@@ -139,17 +121,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             _sceneLoader.LoadGameScene();
         }
-
-        //if (runner.IsServer)
-        //{
-        //    // Create a unique position for the player
-        //    Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
-        //    NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
-        //    // Keep track of the player avatars so we can remove it when they disconnect
-        //    _spawnedCharacters.Add(player, networkPlayerObject);
-
-        //    Debug.Log(player.PlayerId);
-        //}
     }
 
 
@@ -160,24 +131,28 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             if (runner.IsServer)
             {
-
                 // Create a unique position for the player
-
                 Vector3 spawnPosition = new Vector3(33f, 4.7f, 5.2f);
                 networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
-
-
                 // Keep track of the player avatars so we can remove it when they disconnect
                 _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObject);
 
                 Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
-
             }
             else
             {
-                networkPlayerObject = GameObject.Find("Notre Player Prefab").GetComponent<NetworkObject>();
+                // La balle a-t-elle eu le temps d'être spawnée quand cette méthode s'exécute chez le client ? Mettons un délai pour voir :
+                StartCoroutine(WaitForPlayerToSpawn());
             }
         }
+    }
+
+
+    IEnumerator WaitForPlayerToSpawn()
+    {
+        yield return new WaitForSeconds(2);
+        playableBall = FindAnyObjectByType<Player>();
+        networkPlayerObject = playableBall.gameObject.GetComponent<NetworkObject>();
     }
 
 
@@ -197,65 +172,36 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        var data = new NetworkInputData();
-
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-
-            if ((networkPlayerObject.GetComponent<Player>().IsHostTurn && runner.IsServer)
-                || (!networkPlayerObject.GetComponent<Player>().IsHostTurn && runner.IsClient))
+            if (playableBall != null)
             {
-                if (Input.GetKey(KeyCode.UpArrow))
-                    data.direction += Vector3.forward;
+                if ((playableBall.IsHostTurn && runner.IsServer)
+                || (!playableBall.IsHostTurn && runner.IsClient))
+                {
+                    var data = new NetworkInputData();
 
-                if (Input.GetKey(KeyCode.DownArrow))
-                    data.direction += Vector3.back;
+                    if (Input.GetKey(KeyCode.UpArrow))
+                        data.direction += Vector3.forward;
 
-                if (Input.GetKey(KeyCode.LeftArrow))
-                    data.direction += Vector3.left;
+                    if (Input.GetKey(KeyCode.DownArrow))
+                        data.direction += Vector3.back;
 
-                if (Input.GetKey(KeyCode.RightArrow))
-                    data.direction += Vector3.right;
+                    if (Input.GetKey(KeyCode.LeftArrow))
+                        data.direction += Vector3.left;
+
+                    if (Input.GetKey(KeyCode.RightArrow))
+                        data.direction += Vector3.right;
+
+                    if (Input.GetKeyDown(KeyCode.Return))
+                        playableBall.NextPlayerTurn();
+
+                    input.Set(data);
+                }
             }
-
-            if (Input.GetKeyDown(KeyCode.M)) networkPlayerObject.GetComponent<Player>().NextPlayerTurn();
-
         }
-        input.Set(data);
     }
 
-
-
-
-
-    public void SendMessageStatic(string message)
-    {
-        Rpc_StaticSendMessage(_runner, message);
-    }
-
-    [Rpc]
-    public static void Rpc_StaticSendMessage(NetworkRunner runner, string message)
-    {
-        Debug.Log(message);
-    }
-
-
-    //[Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
-    //public void RPC_SendMessage(string message)
-    //{
-    //    Debug.Log(message);
-    //}
-
-    //public void SendMessageStatic(string message)
-    //{
-    //    Rpc_StaticSendMessage(_runner, message);
-    //}
-
-    //[Rpc]
-    //public static void Rpc_StaticSendMessage(NetworkRunner runner, string message)
-    //{
-    //    Debug.Log(message);
-    //}
 
     public void DestroyNetworkRunnerAndReloadMenuScene()
     {
@@ -275,6 +221,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             SceneManager.LoadScene(0);
         });
     }
+
+
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
         if (SceneManager.GetActiveScene().buildIndex == 1)
@@ -291,22 +239,15 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
-
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
-
-
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
-
     public void OnSceneLoadStart(NetworkRunner runner) { Debug.Log("Chargement de la scène..."); }
-
-
-
 
 
     private void DebugLogConnexion(StartGameResult result)
@@ -323,7 +264,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             {
                 Debug.Log(_runner.GameMode);
             }
-
         }
         else
         {
