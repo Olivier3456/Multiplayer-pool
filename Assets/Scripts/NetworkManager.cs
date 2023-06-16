@@ -90,7 +90,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public async void JoinGame()
     {
-        if (_sessionListDropdown.options.Count > 1)
+        if (_sessionListDropdown.options.Count > 0)
         {
             Debug.Log("Session rejointe : " + _sessionListDropdown.options[_sessionListDropdown.value].text);
 
@@ -115,7 +115,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         _sceneLoader = GetComponent<CustomSceneLoader>();
 
-        if (runner.ActivePlayers.Count() == 1)
+        if (runner.ActivePlayers.Count() == 2)
         {
             _sceneLoader.LoadGameScene();
         }
