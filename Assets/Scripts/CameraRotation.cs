@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 public class CameraRotation : MonoBehaviour
@@ -7,13 +8,14 @@ public class CameraRotation : MonoBehaviour
     float desiredHorizontalAngle;
     float desiredVerticalAngle;
     private Vector3 offset;
+    private NetworkRunner runner;
 
     void Start()
     {
         // Calcul de l'offset initial entre la caméra et l'objet
        
         Cursor.visible = false;
-
+        runner = FindObjectOfType<NetworkRunner>();
 
     }
 
@@ -21,7 +23,7 @@ public class CameraRotation : MonoBehaviour
     {
         if (target == null)
         {
-            target = FindAnyObjectByType<Player>().transform;
+            target = FindObjectsByType<Player>(FindObjectsSortMode.InstanceID)[runner.IsServer == true? 0 : 1].transform;
             if (target != null) offset = transform.position - target.position;
         }
         else
@@ -29,7 +31,7 @@ public class CameraRotation : MonoBehaviour
             // Obtention des mouvements de la souris
             float horizontal = Input.GetAxis("Mouse X") * rotationSpeed;
             float vertical = Input.GetAxis("Mouse Y") * rotationSpeed;
-                        
+            Mathf.Clamp(horizontal, -30, 30);
 
             // Mise à jour de la position de la caméra en fonction de la rotation
             desiredHorizontalAngle += horizontal;

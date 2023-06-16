@@ -13,7 +13,7 @@ public class Player : NetworkBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        balls = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        balls = FindObjectsByType<Player>(FindObjectsSortMode.InstanceID);
     }
 
 
@@ -58,8 +58,6 @@ public class Player : NetworkBehaviour
             balls[1].gameObject.SetActive(false);
 
         }
-        IsHostTurn = !IsHostTurn;
-
     }
 
 
