@@ -26,7 +26,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private CustomSceneLoader _sceneLoader;
     private Canvas _connectionLostMessage;
-    NetworkObject[] networkPlayerObjects;
+    NetworkObject[] networkPlayerObjects = new NetworkObject[2];
 
     Player playableBall;
 
@@ -131,8 +131,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             {
                 // Create a unique position for the player
                 Vector3 spawnPosition = new Vector3(33f, 4.7f, 5.2f);
-                networkPlayerObjects[0] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
                 networkPlayerObjects[1] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.Last());
+                networkPlayerObjects[1].gameObject.SetActive(false);
+                networkPlayerObjects[0] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
                 // Keep track of the player avatars so we can remove it when they disconnect
                 _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObjects[0]);
                 _spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
