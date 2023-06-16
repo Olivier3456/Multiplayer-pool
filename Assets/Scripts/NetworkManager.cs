@@ -9,7 +9,6 @@ using TMPro;
 using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Unity.PlasticSCM.Editor.WebApi;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -171,6 +170,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             _opponentLeftMessage.gameObject.SetActive(true);
             _opponentLeftMessage.GetComponentInChildren<Button>().onClick.RemoveAllListeners();
             _opponentLeftMessage.GetComponentInChildren<Button>().onClick.AddListener(_sceneLoader.LoadLobbyScene);
+            Cursor.visible = true;
         }
     }
 
@@ -229,6 +229,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             SceneManager.LoadScene(0);
         });
+        Cursor.visible = true;
     }
 
 
@@ -244,6 +245,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             {
                 SceneManager.LoadScene(0);
             });
+
+            Cursor.visible = true;
         }
     }
 
