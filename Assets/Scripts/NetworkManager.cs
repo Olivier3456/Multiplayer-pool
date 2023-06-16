@@ -176,8 +176,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             if (playableBall != null)
             {
-                if ((playableBall.IsHostTurn && runner.IsServer)
-                || (!playableBall.IsHostTurn && runner.IsClient))
+                if ((Player.IsHostTurn && runner.IsServer)
+                || (!Player.IsHostTurn && runner.IsClient))
                 {
                     var data = new NetworkInputData();
 

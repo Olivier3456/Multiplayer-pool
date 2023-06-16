@@ -4,17 +4,34 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
-    // private NetworkCharacterControllerPrototype _cc;
+    //[Networked]
+    //public bool IsHostTurn { get; set; }
 
-    // static NetworkRunner _nr;
+    private Rigidbody _rb;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();        
+    }
 
 
-    
-    [Networked]
-    public bool IsHostTurn { get; set; }
+
+    public static bool IsHostTurn;
+    [Networked(OnChanged = nameof(SwitchTurn))]
+    public bool MyProperty { get; set; }
+
+    protected static void SwitchTurn(Changed<Player> changed)
+    {
+        changed.LoadNew();
+        IsHostTurn = changed.Behaviour.MyProperty;
+        changed.LoadOld();
+        var oldval = changed.Behaviour.MyProperty;
+        Debug.Log($"IsHostTurn changed from {oldval} to {IsHostTurn}");
+    }
 
 
-   
+
+
 
     /*public static void OnTurnChange(Changed<Player> changed)
     {
@@ -22,24 +39,10 @@ public class Player : NetworkBehaviour
         else changed.Behaviour.CanPlay = false;
     }*/
 
+
     public void NextPlayerTurn()
     {
         IsHostTurn = !IsHostTurn;
-    }
-
-    
-
-
-
-
-    private Rigidbody _rb;
-
-    private void Awake()
-    {
-      //  _cc = GetComponent<NetworkCharacterControllerPrototype>();
-
-        _rb = GetComponent<Rigidbody>();
-      //  _nr = FindAnyObjectByType<NetworkRunner>();
     }
 
 
@@ -53,8 +56,4 @@ public class Player : NetworkBehaviour
             _rb.AddForce(data.direction);
         }
     }
-
-   
-
-
 }
