@@ -68,7 +68,7 @@ public class Player : NetworkBehaviour
             data.direction.Normalize();
            // _cc.Move(5 * data.direction * Runner.DeltaTime);
 
-            _rb.AddForce(data.direction);
+            _rb.AddForce(data.direction * 5);
         }
     }
 }
