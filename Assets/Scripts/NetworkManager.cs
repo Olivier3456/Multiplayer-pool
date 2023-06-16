@@ -90,7 +90,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public async void JoinGame()
     {
-        if (_sessionListDropdown.options.Count > 0)
+        if (_sessionListDropdown.options.Count > 1)
         {
             Debug.Log("Session rejointe : " + _sessionListDropdown.options[_sessionListDropdown.value].text);
 
@@ -153,7 +153,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         yield return new WaitForSeconds(2);
         //playableBall = FindAnyObjectByType<Player>();
-        networkPlayerObjects = FindObjectsByType<NetworkObject>(FindObjectsSortMode.None);
+        networkPlayerObjects = FindObjectsByType<NetworkObject>(FindObjectsSortMode.InstanceID);
     }
 
 
