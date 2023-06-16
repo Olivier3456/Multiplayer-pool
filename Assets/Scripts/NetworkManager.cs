@@ -183,8 +183,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             if (networkPlayerObjects != null)
             {
                 Debug.Log("playableBall is not null");
-                if ((Player.IsHostTurn && runner.IsServer)
-                || (!Player.IsHostTurn && runner.IsClient))
+                //if ((Player.IsHostTurn && runner.IsServer)
+                //|| (!Player.IsHostTurn && runner.IsClient))
                 {
                     var data = new NetworkInputData();
 
@@ -200,9 +200,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                     if (Input.GetKey(KeyCode.RightArrow))
                         data.direction += _camera.transform.right;
 
-                    if (Input.GetKeyDown(KeyCode.Return))
+                    if (Input.GetKeyDown(KeyCode.Space))
                     {
-                        Player.IsHostTurn = !Player.IsHostTurn;
+                        //Player.IsHostTurn = !Player.IsHostTurn;
                         networkPlayerObjects[0].AssignInputAuthority(runner.ActivePlayers.Last());
                     }
 
