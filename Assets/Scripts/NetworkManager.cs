@@ -131,12 +131,12 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             {
                 // Create a unique position for the player
                 Vector3 spawnPosition = new Vector3(33f, 4.7f, 5.2f);
-                networkPlayerObjects[1] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.Last());
-                Player.IsHostTurn = true;
+                //networkPlayerObjects[1] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.Last());
+                //Player.IsHostTurn = true;
                 networkPlayerObjects[0] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
                 // Keep track of the player avatars so we can remove it when they disconnect
                 _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObjects[0]);
-                _spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
+                //_spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
 
                 Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
                 _camera = Camera.main;
@@ -201,7 +201,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                         data.direction += _camera.transform.right;
 
                     if (Input.GetKeyDown(KeyCode.Return))
+                    {
                         Player.IsHostTurn = !Player.IsHostTurn;
+                        networkPlayerObjects[0].AssignInputAuthority(runner.ActivePlayers.Last());
+                    }
 
                     input.Set(data);
                     

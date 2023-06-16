@@ -24,11 +24,11 @@ public class Player : NetworkBehaviour
 
     protected static void SwitchTurn(Changed<Player> changed)
     {
-        //changed.LoadNew();
-        //IsHostTurn = changed.Behaviour.MyProperty;
-        //changed.LoadOld();
-        //var oldval = changed.Behaviour.MyProperty;
-        //Debug.Log($"IsHostTurn changed from {oldval} to {IsHostTurn}");
+        changed.LoadNew();
+        IsHostTurn = changed.Behaviour.MyProperty;
+        changed.LoadOld();
+        var oldval = changed.Behaviour.MyProperty;
+        Debug.Log($"IsHostTurn changed from {oldval} to {IsHostTurn}");
         NextPlayerTurn();
     }
 
