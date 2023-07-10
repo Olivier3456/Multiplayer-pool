@@ -10,9 +10,9 @@ using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
+public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
-    static NetworkRunner _runner;
+    public static NetworkRunner _runner;
 
     [SerializeField] private TMP_InputField _sessionNameInputField;
     [SerializeField] private TMP_Dropdown _sessionListDropdown;
@@ -25,30 +25,36 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
 
     private CustomSceneLoader _sceneLoader;
     private Canvas _connectionLostMessage;
-    NetworkObject[] networkPlayerObjects = new NetworkObject[2];
-
+    
     WhiteBall playableBall;
+
+    public List<Player> playerObjects;
 
 
     private MyGameManager _gameManager;
 
-    public Player player;
+    public Player playerPrefab;
 
-    [Networked(OnChanged = nameof(OnTurnChange))] public int playerPlayingId { get; set; }
+    public static NetworkManager instance;
+   
 
     private void Awake()
     {
         _runner = GetComponent<NetworkRunner>();
         DontDestroyOnLoad(gameObject);
+
+
+        if (instance == null)
+            instance = this;
     }
 
 
     // must be on a networkBehaviour
-    [Rpc(RpcSources.All, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void Rpc_LoadDone(RpcInfo info = default)
-    {
-        Debug.Log("RPC");
-    }
+    //[Rpc(RpcSources.All, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    //public void Rpc_LoadDone(RpcInfo info = default)
+    //{
+    //    Debug.Log("RPC");
+    //}
 
 
     public async void HostGame()
@@ -128,12 +134,30 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
     {
         _sceneLoader = GetComponent<CustomSceneLoader>();
 
+        Player playerToSpawn;
+        if (runner.IsServer)
+        {
+            playerToSpawn = runner.Spawn(playerPrefab);
+            playerToSpawn.playerRef = player;
+            playerObjects.Add(playerToSpawn);
+
+        }
+
+
+
         if (runner.ActivePlayers.Count() == 2)
         {
             _sceneLoader.LoadGameScene();
         }
+
+
+
     }
 
+    public PlayerRef GetLocalPlayerRef()
+    {
+        return _runner.LocalPlayer;
+    }
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
@@ -146,33 +170,29 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
                 Vector3 spawnPosition = new Vector3(33f, 4.7f, 5.2f);
                 //networkPlayerObjects[1] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.Last());
                 //Player.IsHostTurn = true;
-                networkPlayerObjects[0] = runner.Spawn(_whiteBallPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
+                runner.Spawn(_whiteBallPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
+
+
 
                 // Keep track of the player avatars so we can remove it when they disconnect
-                _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObjects[0]);
+                
                 //_spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
-                player.playerId = 0;
+               
 
-                _gameManager.AddPlayerRigidbodyToBallsList(networkPlayerObjects[0].gameObject.GetComponent<Rigidbody>());
+               // _gameManager.AddPlayerRigidbodyToBallsList(.gameObject.GetComponent<Rigidbody>());
 
                 Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
 
             }
             else
             {
-                player.playerId = 1;
+                
                 // La balle a-t-elle eu le temps d'être spawnée quand cette méthode s'exécute chez le client ? Mettons un délai pour voir :
                 StartCoroutine(WaitForPlayerToSpawn());
             }
             var canvas = GameObject.Find("TurnCanvas");
 
-            if (networkPlayerObjects[0].InputAuthority == runner.ActivePlayers.First())
-            {
-                if (runner.IsServer)
-                    canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
-                else
-                    canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
-            }
+           
         }
     }
 
@@ -181,33 +201,12 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
     {
         yield return new WaitForSeconds(2);
         //playableBall = FindAnyObjectByType<Player>();
-        networkPlayerObjects = FindObjectsByType<NetworkObject>(FindObjectsSortMode.InstanceID);
-        _gameManager.AddPlayerRigidbodyToBallsList(networkPlayerObjects[0].gameObject.GetComponent<Rigidbody>());
+        //networkPlayerObjects = FindObjectsByType<NetworkObject>(FindObjectsSortMode.InstanceID);
+        //_gameManager.AddPlayerRigidbodyToBallsList(networkPlayerObjects[0].gameObject.GetComponent<Rigidbody>());
     }
 
 
-    static void OnTurnChange(Changed<NetworkManager> changed)
-    {
-        var canvas = GameObject.Find("TurnCanvas");
-        //Player.IsHostTurn = !Player.IsHostTurn;
-        Player ourPlayer = FindAnyObjectByType<Player>();
-
-
-        if (changed.Behaviour.playerPlayingId == ourPlayer.playerId)
-        {
-            //changed.Behaviour.networkPlayerObjects[0].AssignInputAuthority(_runner.ActivePlayers.Last());
-            //if (_runner.IsServer)
-            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
-            ourPlayer.canPlay = true;
-        }
-        else
-        {
-            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
-            ourPlayer.canPlay = false;
-        }
-
-
-    }
+   
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
@@ -233,20 +232,7 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
         SceneManager.LoadScene(0);
     }
 
-    public IEnumerator CheckBallsMovementRepeatively()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
-
-        while (!_gameManager.CheckIfAllRigidbodiesAreSleeping())
-        {
-            yield return waitForSeconds;
-        }
-
-        if (playerPlayingId == 0) playerPlayingId = 1;
-        else playerPlayingId = 0;
-
-        yield return null;
-    }
+    
 
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
@@ -314,7 +300,3 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
         }
     }
 }
-
-
-
-

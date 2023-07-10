@@ -1,28 +1,45 @@
+using Fusion;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
-public class MyGameManager : MonoBehaviour
+public class MyGameManager : NetworkBehaviour
 {
     [SerializeField] private BoxCollider[] holes;
     private int redScore;
     private int yellowScore;
     private bool redIsPlaying;
 
-    public List<Rigidbody> ballRigidbodies = new List<Rigidbody>();
+    public List<BaseBall> balls = new List<BaseBall>();
+
+    public static MyGameManager instance;
+
+    [Networked(OnChanged = nameof(OnTurnChange))] public PlayerRef playerPlaying { get; set; }
 
 
-
-    public void AddPlayerRigidbodyToBallsList(Rigidbody playerRigidbody)
+    private void Awake()
     {
-        ballRigidbodies.Add(playerRigidbody);
+        if (instance == null)
+        instance = this;
+
+        DontDestroyOnLoad(gameObject);
+    }
+
+    
+
+    public void AddBallToBallsList(BaseBall baseBall)
+    {
+        balls.Add(baseBall);
     }
 
     public bool CheckIfAllRigidbodiesAreSleeping()
     {
         bool result = true;
-        for (int i = 0; i < ballRigidbodies.Count; i++)
+        for (int i = 0; i < balls.Count; i++)
         {
-            if (!ballRigidbodies[i].IsSleeping())
+            if (!balls[i].GetComponent<Rigidbody>().IsSleeping())
             {
                 result = false;
             }
@@ -30,10 +47,31 @@ public class MyGameManager : MonoBehaviour
         return result;
     }
 
+    public IEnumerator CheckBallsMovementRepeatively()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
+
+        while (!CheckIfAllRigidbodiesAreSleeping())
+        {
+            yield return waitForSeconds;
+        }
+
+        if (playerPlaying == NetworkManager._runner.ActivePlayers.First())
+        {
+            playerPlaying = NetworkManager._runner.ActivePlayers.Last();
+        }
+        else
+        {
+            playerPlaying = NetworkManager._runner.ActivePlayers.First();
+        }
+
+        yield return null;
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
-        ballRigidbodies.Remove(other.gameObject.GetComponent<Rigidbody>());
+        balls.Remove(other.gameObject.GetComponent<BaseBall>());
 
         if (other.tag == "red")
         {
@@ -54,5 +92,29 @@ public class MyGameManager : MonoBehaviour
         {
             //fault
         }
+    }
+
+
+    static void OnTurnChange(Changed<MyGameManager> changed)
+    {
+        var canvas = GameObject.Find("TurnCanvas");
+        
+        //Player ourPlayer = FindAnyObjectByType<Player>();
+
+
+        if (NetworkManager.instance.GetLocalPlayerRef() == changed.Behaviour.playerPlaying)
+        {
+            //changed.Behaviour.networkPlayerObjects[0].AssignInputAuthority(_runner.ActivePlayers.Last());
+            //if (_runner.IsServer)
+            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
+            
+        }
+        else
+        {
+            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
+            
+        }
+
+
     }
 }

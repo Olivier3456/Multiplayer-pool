@@ -5,10 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Windows;
 
 public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 {
-    public int playerId;
+    
 
     public bool canPlay;
 
@@ -16,6 +17,11 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     [SerializeField] NetworkRunner runner;
     [SerializeField] NetworkManager networkManager;
+
+
+    NetworkInput networkInput;
+
+    public PlayerRef playerRef;
 
 
     private void Start()
@@ -31,42 +37,61 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             Debug.Log("correct scene");
-            if (canPlay)
+            if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying)
             {
                 Debug.Log("playableBall is not null");
                 //if ((Player.IsHostTurn && runner.IsServer)
                 //|| (!Player.IsHostTurn && runner.IsClient))
                 {
-                    var data = new NetworkInputData();
+                   
 
-                    if (Input.GetKey(KeyCode.UpArrow))
-                        data.direction += _camera.transform.forward;
-
-                    if (Input.GetKey(KeyCode.DownArrow))
-                        data.direction -= _camera.transform.forward;
-
-                    if (Input.GetKey(KeyCode.LeftArrow))
-                        data.direction -= _camera.transform.right;
-
-                    if (Input.GetKey(KeyCode.RightArrow))
-                        data.direction += _camera.transform.right;
-
-                    if (Input.GetKey(KeyCode.Space))
+                    if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow))
                     {
-                        if (checkCoroutine == null)
-                        checkCoroutine = StartCoroutine(networkManager.CheckBallsMovementRepeatively());
+                        networkInput = input;
+
+                        Rpc_BallHit();
                     }
 
-                    input.Set(data);
 
-                    Debug.Log("data sent " + data);
+                        
+
+                    //if (Input.GetKey(KeyCode.DownArrow))
+                    //    data.direction -= _camera.transform.forward;
+
+                    //if (Input.GetKey(KeyCode.LeftArrow))
+                    //    data.direction -= _camera.transform.right;
+
+                    //if (Input.GetKey(KeyCode.RightArrow))
+                    //    data.direction += _camera.transform.right;
+
+                    //if (UnityEngine.Input.GetKey(KeyCode.Space))
+                    //{
+                    //    if (checkCoroutine == null)
+                    //    checkCoroutine = StartCoroutine(networkManager.CheckBallsMovementRepeatively());
+                    //}
+
+                   
                 }
             }
         }
     }
 
 
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void Rpc_BallHit(RpcInfo info = default)
+    {
+        Debug.Log("RPC");
 
+        var data = new NetworkInputData();
+
+        data.direction += _camera.transform.forward;
+
+        networkInput.Set(data);
+
+        StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatively());
+
+        Debug.Log("data sent " + data);
+    }
 
 
 
