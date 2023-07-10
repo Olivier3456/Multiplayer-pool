@@ -10,14 +10,13 @@ using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
+public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
 {
     static NetworkRunner _runner;
 
     [SerializeField] private TMP_InputField _sessionNameInputField;
     [SerializeField] private TMP_Dropdown _sessionListDropdown;
     private Canvas _opponentLeftMessage;
-    
 
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
@@ -28,13 +27,25 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private Canvas _connectionLostMessage;
     NetworkObject[] networkPlayerObjects = new NetworkObject[2];
 
-    Player playableBall;
+    WhiteBall playableBall;
     private Camera _camera;
+
+    private MyGameManager _gameManager;
+
+    [Networked(OnChanged = nameof(OnTurnChange))] public int playerPlayingId { get; set; }
 
     private void Awake()
     {
         _runner = GetComponent<NetworkRunner>();
         DontDestroyOnLoad(gameObject);
+    }
+
+
+    // must be on a networkBehaviour
+    [Rpc(RpcSources.All, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void Rpc_LoadDone(RpcInfo info = default)
+    {
+        Debug.Log("RPC");
     }
 
 
@@ -134,9 +145,12 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                 //networkPlayerObjects[1] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.Last());
                 //Player.IsHostTurn = true;
                 networkPlayerObjects[0] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
+                
                 // Keep track of the player avatars so we can remove it when they disconnect
                 _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObjects[0]);
                 //_spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
+
+                _gameManager.AddPlayerRigidbodyToBallsList(networkPlayerObjects[0].gameObject.GetComponent<Rigidbody>());
 
                 Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
                 _camera = Camera.main;
@@ -165,8 +179,31 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         yield return new WaitForSeconds(2);
         //playableBall = FindAnyObjectByType<Player>();
         networkPlayerObjects = FindObjectsByType<NetworkObject>(FindObjectsSortMode.InstanceID);
+        _gameManager.AddPlayerRigidbodyToBallsList(networkPlayerObjects[0].gameObject.GetComponent<Rigidbody>());
     }
 
+
+    static void OnTurnChange(Changed<NetworkManager> changed)
+    {
+        var canvas = GameObject.Find("TurnCanvas");
+        //Player.IsHostTurn = !Player.IsHostTurn;
+        if (changed.Behaviour.networkPlayerObjects[0].InputAuthority == _runner.ActivePlayers.First())
+        {
+            changed.Behaviour.networkPlayerObjects[0].AssignInputAuthority(_runner.ActivePlayers.Last());
+            if (_runner.IsServer)
+                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
+            else
+                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
+        }
+        else
+        {
+            changed.Behaviour.networkPlayerObjects[0].AssignInputAuthority(_runner.ActivePlayers.First());
+            if (_runner.IsClient)
+                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
+            else
+                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
+        }
+    }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
@@ -184,7 +221,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
-    {
+    { 
         Debug.Log("there was an input");
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
@@ -211,25 +248,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
-                        var canvas = GameObject.Find("TurnCanvas");
-                        //Player.IsHostTurn = !Player.IsHostTurn;
-                        if (networkPlayerObjects[0].InputAuthority == runner.ActivePlayers.First())
-                        {
-                            networkPlayerObjects[0].AssignInputAuthority(runner.ActivePlayers.Last());
-                            if (runner.IsServer)
-                                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
-                            else
-                                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
-
-                        }
-                        else
-                        {
-                            networkPlayerObjects[0].AssignInputAuthority(runner.ActivePlayers.First());
-                            if (runner.IsClient)
-                                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
-                            else
-                                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
-                        }
+                        StartCoroutine(CheckBallsMovementRepeatively());                        
                     }
 
                     input.Set(data);
@@ -245,6 +264,19 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Destroy(GetComponent<NetworkRunner>());
         SceneManager.LoadScene(0);
+    }
+
+    IEnumerator CheckBallsMovementRepeatively()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
+
+        while (!_gameManager.CheckIfAllRigidbodiesAreSleeping())
+        {
+            yield return waitForSeconds;
+        }
+
+        if (playerPlayingId == 0) playerPlayingId = 1;
+        else playerPlayingId = 0;
     }
 
 

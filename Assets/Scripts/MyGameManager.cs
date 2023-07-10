@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,31 +8,44 @@ public class MyGameManager : MonoBehaviour
     private int yellowScore;
     private bool redIsPlaying;
 
-    // Start is called before the first frame update
-    void Start()
+    public List<Rigidbody> ballRigidbodies = new List<Rigidbody>();
+
+
+
+    public void AddPlayerRigidbodyToBallsList(Rigidbody playerRigidbody)
     {
-        
+        ballRigidbodies.Add(playerRigidbody);
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool CheckIfAllRigidbodiesAreSleeping()
     {
-        
+        bool result = true;
+        for (int i = 0; i < ballRigidbodies.Count; i++)
+        {
+            if (!ballRigidbodies[i].IsSleeping())
+            {
+                result = false;
+            }
+        }
+        return result;
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "red")
+        ballRigidbodies.Remove(other.gameObject.GetComponent<Rigidbody>());
+
+        if (other.tag == "red")
         {
             redScore++;
         }
-        if(other.tag == "yellow")
+        if (other.tag == "yellow")
         {
             yellowScore++;
         }
         if (other.tag == "black")
         {
-            if(redScore==7 && redIsPlaying)
+            if (redScore == 7 && redIsPlaying)
             {
                 //win
             }
