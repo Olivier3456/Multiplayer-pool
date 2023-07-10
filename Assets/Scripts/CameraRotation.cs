@@ -23,7 +23,7 @@ public class CameraRotation : MonoBehaviour
     {
         if (target == null)
         {
-            target = FindObjectsByType<WhiteBall>(FindObjectsSortMode.InstanceID)[/*runner.IsServer == true? 0 : 1*/0].transform;
+            target = FindObjectOfType<WhiteBall>().transform;
             if (target != null) offset = transform.position - target.position;
         }
         else

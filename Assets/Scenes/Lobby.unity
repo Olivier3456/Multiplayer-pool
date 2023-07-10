@@ -4381,6 +4381,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1675245792}
   - component: {fileID: 1675245791}
+  - component: {fileID: 1675245793}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4400,8 +4401,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b117efdb9fd36c443b21cd0834c5813c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   playerId: 0
+  canPlay: 0
   runner: {fileID: 1695764788}
+  networkManager: {fileID: 1695764789}
 --- !u!4 &1675245792
 Transform:
   m_ObjectHideFlags: 0
@@ -4417,6 +4421,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1675245793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675245790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2561
+  NetworkGuid:
+    RawGuidValue: 32c92971a8ec458585944c4ef27d5120
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1675245791}
+  SimulationBehaviours: []
 --- !u!1 &1682191477
 GameObject:
   m_ObjectHideFlags: 0
