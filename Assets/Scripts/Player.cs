@@ -17,63 +17,85 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     //[SerializeField] NetworkRunner runner;
     //[SerializeField] NetworkManager networkManager;
-
-
-    NetworkInput networkInput;
+    //NetworkInput networkInput;
 
     public PlayerRef playerRef;
+
+    public WhiteBall whiteBall;
 
 
     private void Start()
     {
-        _camera = Camera.main;
+        _camera = Camera.main;       
     }
+    
 
-    Coroutine checkCoroutine;
-
-    public void OnInput(NetworkRunner runner, NetworkInput input)
+    private void Update()
     {
-        Debug.Log("there was an input");
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             Debug.Log("correct scene");
             if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying)
             {
-                Debug.Log("playableBall is not null");
+                Debug.Log("NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying");
                 //if ((Player.IsHostTurn && runner.IsServer)
                 //|| (!Player.IsHostTurn && runner.IsClient))
                 {
-                   
-
                     if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow))
                     {
-                        networkInput = input;
+                        //networkInput = input;
+                        Debug.Log("GetKeyDown(KeyCode.UpArrow)");
 
                         Rpc_BallHit();
                     }
+                }
+            }
+        }
+    }
+
+
+    public void OnInput(NetworkRunner runner, NetworkInput input)
+    {
+        //Debug.Log("there was an input");
+        //if (SceneManager.GetActiveScene().buildIndex == 1)
+        //{
+        //    Debug.Log("correct scene");
+        //    if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying)
+        //    {
+        //        Debug.Log("NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying");
+        //        //if ((Player.IsHostTurn && runner.IsServer)
+        //        //|| (!Player.IsHostTurn && runner.IsClient))
+        //        {
+        //            if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow))
+        //            {
+        //                networkInput = input;
+        //                Debug.Log("GetKeyDown(KeyCode.UpArrow)");
+
+        //                Rpc_BallHit();
+        //            }
 
 
                         
 
-                    //if (Input.GetKey(KeyCode.DownArrow))
-                    //    data.direction -= _camera.transform.forward;
+        //            //if (Input.GetKey(KeyCode.DownArrow))
+        //            //    data.direction -= _camera.transform.forward;
 
-                    //if (Input.GetKey(KeyCode.LeftArrow))
-                    //    data.direction -= _camera.transform.right;
+        //            //if (Input.GetKey(KeyCode.LeftArrow))
+        //            //    data.direction -= _camera.transform.right;
 
-                    //if (Input.GetKey(KeyCode.RightArrow))
-                    //    data.direction += _camera.transform.right;
+        //            //if (Input.GetKey(KeyCode.RightArrow))
+        //            //    data.direction += _camera.transform.right;
 
-                    //if (UnityEngine.Input.GetKey(KeyCode.Space))
-                    //{
-                    //    if (checkCoroutine == null)
-                    //    checkCoroutine = StartCoroutine(networkManager.CheckBallsMovementRepeatively());
-                    //}
+        //            //if (UnityEngine.Input.GetKey(KeyCode.Space))
+        //            //{
+        //            //    if (checkCoroutine == null)
+        //            //    checkCoroutine = StartCoroutine(networkManager.CheckBallsMovementRepeatively());
+        //            //}
 
                    
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
     }
 
 
@@ -82,15 +104,17 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log("RPC");
 
-        var data = new NetworkInputData();
+        //var data = new NetworkInputData();
 
-        data.direction += _camera.transform.forward;
+        //data.direction += _camera.transform.forward;
 
-        networkInput.Set(data);
+        //networkInput.Set(data);
+
+        whiteBall.BallKicked(_camera.transform.forward);
 
         StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatively());
 
-        Debug.Log("data sent " + data);
+        Debug.Log("Methode WhiteBall/BallKicked appelée par Player/RpcBallHit");
     }
 
 

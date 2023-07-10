@@ -106,15 +106,11 @@ public class MyGameManager : NetworkBehaviour
         {
             //changed.Behaviour.networkPlayerObjects[0].AssignInputAuthority(_runner.ActivePlayers.Last());
             //if (_runner.IsServer)
-            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
-            
+            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";            
         }
         else
         {
-            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
-            
+            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";            
         }
-
-
     }
 }

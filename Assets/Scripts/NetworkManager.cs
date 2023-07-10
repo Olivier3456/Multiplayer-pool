@@ -21,22 +21,18 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef _whiteBallPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
-    private CustomNetworkSceneManager _sceneManager;
 
     private CustomSceneLoader _sceneLoader;
     private Canvas _connectionLostMessage;
-    
-   
+
+
 
     public List<Player> playerObjects;
-
-
-    private MyGameManager _gameManager;
 
     public Player playerPrefab;
 
     public static NetworkManager instance;
-   
+
 
     private void Awake()
     {
@@ -47,14 +43,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (instance == null)
             instance = this;
     }
-
-
-    // must be on a networkBehaviour
-    //[Rpc(RpcSources.All, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    //public void Rpc_LoadDone(RpcInfo info = default)
-    //{
-    //    Debug.Log("RPC");
-    //}
 
 
     public async void HostGame()
@@ -175,24 +163,24 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
 
                 // Keep track of the player avatars so we can remove it when they disconnect
-                
-                //_spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
-               
 
-               // _gameManager.AddPlayerRigidbodyToBallsList(.gameObject.GetComponent<Rigidbody>());
+                //_spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
+
+
+                // _gameManager.AddPlayerRigidbodyToBallsList(.gameObject.GetComponent<Rigidbody>());
 
                 Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
 
             }
             else
             {
-                
+
                 // La balle a-t-elle eu le temps d'être spawnée quand cette méthode s'exécute chez le client ? Mettons un délai pour voir :
                 StartCoroutine(WaitForPlayerToSpawn());
             }
             var canvas = GameObject.Find("TurnCanvas");
 
-           
+
         }
     }
 
@@ -206,7 +194,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
-   
+
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
@@ -232,7 +220,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         SceneManager.LoadScene(0);
     }
 
-    
+
 
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
