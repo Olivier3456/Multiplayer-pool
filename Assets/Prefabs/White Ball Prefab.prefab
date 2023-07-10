@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 5491175904713416503}
   - component: {fileID: -3725667453367057511}
   m_Layer: 0
-  m_Name: Notre Player Prefab
+  m_Name: White Ball Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -15,8 +15,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     private Camera _camera;
 
-    [SerializeField] NetworkRunner runner;
-    [SerializeField] NetworkManager networkManager;
+    //[SerializeField] NetworkRunner runner;
+    //[SerializeField] NetworkManager networkManager;
 
 
     NetworkInput networkInput;

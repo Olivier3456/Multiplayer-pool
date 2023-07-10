@@ -26,7 +26,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private CustomSceneLoader _sceneLoader;
     private Canvas _connectionLostMessage;
     
-    WhiteBall playableBall;
+   
 
     public List<Player> playerObjects;
 
