@@ -18,7 +18,7 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
     [SerializeField] private TMP_Dropdown _sessionListDropdown;
     private Canvas _opponentLeftMessage;
 
-    [SerializeField] private NetworkPrefabRef _playerPrefab;
+    [SerializeField] private NetworkPrefabRef _whiteBallPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
     private CustomNetworkSceneManager _sceneManager;
@@ -28,9 +28,11 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
     NetworkObject[] networkPlayerObjects = new NetworkObject[2];
 
     WhiteBall playableBall;
-    private Camera _camera;
+
 
     private MyGameManager _gameManager;
+
+    public Player player;
 
     [Networked(OnChanged = nameof(OnTurnChange))] public int playerPlayingId { get; set; }
 
@@ -144,22 +146,23 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
                 Vector3 spawnPosition = new Vector3(33f, 4.7f, 5.2f);
                 //networkPlayerObjects[1] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.Last());
                 //Player.IsHostTurn = true;
-                networkPlayerObjects[0] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
-                
+                networkPlayerObjects[0] = runner.Spawn(_whiteBallPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
+
                 // Keep track of the player avatars so we can remove it when they disconnect
                 _spawnedCharacters.Add(runner.ActivePlayers.First(), networkPlayerObjects[0]);
                 //_spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
+                player.playerId = 0;
 
                 _gameManager.AddPlayerRigidbodyToBallsList(networkPlayerObjects[0].gameObject.GetComponent<Rigidbody>());
 
                 Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
-                _camera = Camera.main;
+
             }
             else
             {
+                player.playerId = 1;
                 // La balle a-t-elle eu le temps d'être spawnée quand cette méthode s'exécute chez le client ? Mettons un délai pour voir :
                 StartCoroutine(WaitForPlayerToSpawn());
-                _camera = Camera.main;
             }
             var canvas = GameObject.Find("TurnCanvas");
 
@@ -187,22 +190,23 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
     {
         var canvas = GameObject.Find("TurnCanvas");
         //Player.IsHostTurn = !Player.IsHostTurn;
-        if (changed.Behaviour.networkPlayerObjects[0].InputAuthority == _runner.ActivePlayers.First())
+        Player ourPlayer = FindAnyObjectByType<Player>();
+
+
+        if (changed.Behaviour.playerPlayingId == ourPlayer.playerId)
         {
-            changed.Behaviour.networkPlayerObjects[0].AssignInputAuthority(_runner.ActivePlayers.Last());
-            if (_runner.IsServer)
-                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
-            else
-                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
+            //changed.Behaviour.networkPlayerObjects[0].AssignInputAuthority(_runner.ActivePlayers.Last());
+            //if (_runner.IsServer)
+            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
+            ourPlayer.canPlay = true;
         }
         else
         {
-            changed.Behaviour.networkPlayerObjects[0].AssignInputAuthority(_runner.ActivePlayers.First());
-            if (_runner.IsClient)
-                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
-            else
-                canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
+            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
+            ourPlayer.canPlay = false;
         }
+
+
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -220,44 +224,7 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void OnInput(NetworkRunner runner, NetworkInput input)
-    { 
-        Debug.Log("there was an input");
-        if (SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            Debug.Log("correct scene");
-            if (networkPlayerObjects != null)
-            {
-                Debug.Log("playableBall is not null");
-                //if ((Player.IsHostTurn && runner.IsServer)
-                //|| (!Player.IsHostTurn && runner.IsClient))
-                {
-                    var data = new NetworkInputData();
 
-                    if (Input.GetKey(KeyCode.UpArrow))
-                        data.direction += _camera.transform.forward;
-
-                    if (Input.GetKey(KeyCode.DownArrow))
-                        data.direction -= _camera.transform.forward;
-
-                    if (Input.GetKey(KeyCode.LeftArrow))
-                        data.direction -= _camera.transform.right;
-
-                    if (Input.GetKey(KeyCode.RightArrow))
-                        data.direction += _camera.transform.right;
-
-                    if (Input.GetKeyDown(KeyCode.Space))
-                    {
-                        StartCoroutine(CheckBallsMovementRepeatively());                        
-                    }
-
-                    input.Set(data);
-                    
-                Debug.Log("data sent " + data);
-                }
-            }
-        }
-    }
 
 
     public void DestroyNetworkRunnerAndReloadMenuScene()
@@ -266,7 +233,7 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
         SceneManager.LoadScene(0);
     }
 
-    IEnumerator CheckBallsMovementRepeatively()
+    public IEnumerator CheckBallsMovementRepeatively()
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
 
@@ -277,6 +244,8 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
 
         if (playerPlayingId == 0) playerPlayingId = 1;
         else playerPlayingId = 0;
+
+        yield return null;
     }
 
 
@@ -322,6 +291,7 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
     public void OnSceneLoadStart(NetworkRunner runner) { Debug.Log("Chargement de la scène..."); }
 
+    public void OnInput(NetworkRunner runner, NetworkInput input) { }
 
     private void DebugLogConnexion(StartGameResult result)
     {

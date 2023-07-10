@@ -4371,6 +4371,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1657735739}
   m_CullTransparentMesh: 1
+--- !u!1 &1675245790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1675245792}
+  - component: {fileID: 1675245791}
+  m_Layer: 0
+  m_Name: Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1675245791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675245790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b117efdb9fd36c443b21cd0834c5813c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerId: 0
+  runner: {fileID: 1695764788}
+--- !u!4 &1675245792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675245790}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -29.714262, y: -0.5092344, z: 2.6595778}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1682191477
 GameObject:
   m_ObjectHideFlags: 0
@@ -4400,7 +4446,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e83a7dcfb8dae7489bd4078381b5cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
   holes: []
   ballRigidbodies: []
 --- !u!4 &1682191480
@@ -4595,10 +4640,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c09326314e8579047898234f0c4d3bed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   _sessionNameInputField: {fileID: 978058801}
   _sessionListDropdown: {fileID: 787948285}
-  _playerPrefab:
-    RawGuidValue: 398e21b536088b941b51fa88d94f76ee
+  _whiteBallPrefab:
+    RawGuidValue: 00000000000000000000000000000000
+  player: {fileID: 0}
+  _playerPlayingId: 0
 --- !u!4 &1695764790
 Transform:
   m_ObjectHideFlags: 0
