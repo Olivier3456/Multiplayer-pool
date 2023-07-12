@@ -22,10 +22,10 @@ public class BaseBall : NetworkBehaviour
     protected virtual void Update()
     {
         print(_rb.velocity.magnitude);
-        if(_rb.velocity.magnitude < 0.025)
+        if(_rb.velocity.magnitude < 0.09)
         {
             _rb.velocity = Vector3.zero;
-            _rb.angularVelocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;            
         }
     }
 }

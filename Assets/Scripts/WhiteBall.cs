@@ -23,7 +23,7 @@ public class WhiteBall : BaseBall
     public void BallKicked(Vector3 direction)
     {
         direction.Normalize();
-        _rb.AddForce(direction * 5, ForceMode.Impulse);
+        _rb.AddForce(direction * 15, ForceMode.Impulse);
     }
 
     protected override void OnEnable()
