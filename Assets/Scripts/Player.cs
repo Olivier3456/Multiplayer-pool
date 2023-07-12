@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Windows;
+using Input = UnityEngine.Input;
 
 public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 {
     public bool canPlay;
 
-    private Camera _camera;
+    //private Camera _camera;
 
     //[SerializeField] NetworkRunner runner;
     //[SerializeField] NetworkManager networkManager;
@@ -26,22 +27,19 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start()
-    {        
-        _camera = Camera.main;
-    }
+
 
     public override void Spawned()
     {
         Debug.Log("La méthode Spawned de Player a été appelée.");
         base.Spawned();
-        _camera = Camera.main;
+        //   _camera = Camera.main;
     }
 
 
 
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
@@ -50,14 +48,14 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
             if (MyGameManager.spawnedCalled)
             {
                 Debug.Log("Player : MyGameManager.spawnedCalled = true");
-                
+
                 if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying)
                 {
                     Debug.Log("NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying");
                     //if ((Player.IsHostTurn && runner.IsServer)
                     //|| (!Player.IsHostTurn && runner.IsClient))
                     {
-                        if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow))
+                        if (Input.GetKeyDown(KeyCode.UpArrow))
                         {
                             //networkInput = input;
                             Debug.Log("GetKeyDown(KeyCode.UpArrow)");
@@ -93,7 +91,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         //            }
 
 
-                        
+
 
         //            //if (Input.GetKey(KeyCode.DownArrow))
         //            //    data.direction -= _camera.transform.forward;
@@ -110,7 +108,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         //            //    checkCoroutine = StartCoroutine(networkManager.CheckBallsMovementRepeatively());
         //            //}
 
-                   
+
         //        }
         //    }
         //}
@@ -128,7 +126,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
         //networkInput.Set(data);
 
-        whiteBall.BallKicked(_camera.transform.forward);
+        whiteBall.BallKicked(Camera.main.transform.forward);
 
         StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatively());
 
@@ -169,46 +167,46 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
     {
-     
+
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-    
+
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-     
+
     }
 
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
     {
-     
+
     }
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-     
+
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
     {
-     
+
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-     
+
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-     
+
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
     {
-     
+
     }
 }

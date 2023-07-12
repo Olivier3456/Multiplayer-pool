@@ -129,7 +129,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         Player playerToSpawn;
         if (runner.IsServer)
         {
-            _runner.Spawn(_gameManagerPrefab);
+            _runner.Spawn(_gameManagerPrefab).GetComponent<MyGameManager>().playerPlaying = player;
+            
 
             playerToSpawn = runner.Spawn(playerPrefab);
             playerToSpawn.playerRef = player;
