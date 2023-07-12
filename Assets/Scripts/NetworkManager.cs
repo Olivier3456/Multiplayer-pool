@@ -128,7 +128,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             playerToSpawn = runner.Spawn(playerPrefab);
             playerToSpawn.playerRef = player;
             playerObjects.Add(playerToSpawn);
-
         }
 
 
@@ -137,9 +136,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             _sceneLoader.LoadGameScene();
         }
-
-
-
     }
 
     public PlayerRef GetLocalPlayerRef()
