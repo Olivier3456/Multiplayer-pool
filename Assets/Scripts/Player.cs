@@ -60,7 +60,10 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                             //networkInput = input;
                             //Debug.Log("GetKeyDown(KeyCode.UpArrow)");
 
-                            Rpc_BallHit();
+                            if (MyGameManager.checkCoroutine == null)
+                            {
+                                Rpc_BallHit();
+                            }
                         }
                     }
                 }
@@ -128,7 +131,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
         whiteBall.BallKicked(Camera.main.transform.forward);
 
-        StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatedly());
+        MyGameManager.checkCoroutine = StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatedly());
 
         Debug.Log("Methode WhiteBall/BallKicked appelée par Player/RpcBallHit");
     }

@@ -61,6 +61,9 @@ public class MyGameManager : NetworkBehaviour
         return result;
     }
 
+    public static Coroutine checkCoroutine;
+
+
     public IEnumerator CheckBallsMovementRepeatedly()
     {
         Debug.Log("Checking movement repeatedly");
