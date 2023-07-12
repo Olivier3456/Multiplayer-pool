@@ -27,6 +27,11 @@ public class MyGameManager : NetworkBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    private void Start()
+    {
+        Spawned();
+    }
+
     public override void Spawned()
     {
         Debug.Log("La méthode Spawned de MyGameManager a été appelée.");
