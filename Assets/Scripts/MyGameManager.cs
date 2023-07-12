@@ -65,12 +65,12 @@ public class MyGameManager : NetworkBehaviour
     {
         Debug.Log("Checking movement repeatedly");
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
-
-        while (!CheckIfAllRigidbodiesAreSleeping())
+        do
         {
             yield return waitForSeconds;
-        }
-        for(int i = 0; i < NetworkManager._runner.ActivePlayers.Count(); ++i)
+        } while (!CheckIfAllRigidbodiesAreSleeping());
+
+        for (int i = 0; i < NetworkManager._runner.ActivePlayers.Count(); ++i)
         {
             Debug.Log("Player n " + i + ": " + NetworkManager._runner.ActivePlayers.ElementAt(i));
         }
