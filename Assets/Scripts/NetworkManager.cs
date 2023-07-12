@@ -16,6 +16,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     [SerializeField] private TMP_InputField _sessionNameInputField;
     [SerializeField] private TMP_Dropdown _sessionListDropdown;
+    [SerializeField] private GameObject _gameManagerPrefab;
+
     private Canvas _opponentLeftMessage;
 
     [SerializeField] private NetworkPrefabRef _whiteBallPrefab;
@@ -36,6 +38,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private void Awake()
     {
+        _runner.Spawn(_gameManagerPrefab);
         _runner = GetComponent<NetworkRunner>();
         DontDestroyOnLoad(gameObject);
 
