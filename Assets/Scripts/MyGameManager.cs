@@ -53,7 +53,7 @@ public class MyGameManager : NetworkBehaviour
         for (int i = 0; i < balls.Count; i++)
         {
 
-            if (balls[i].GetComponent<Rigidbody>().velocity.magnitude > 0.09)
+            if (balls[i].GetComponent<Rigidbody>().velocity.magnitude > 0.2)
             {
                 result = false;
             }
@@ -77,6 +77,7 @@ public class MyGameManager : NetworkBehaviour
         Debug.Log("playerPlaying: " + playerPlaying);
         if (playerPlaying == NetworkManager._runner.ActivePlayers.First())
         {
+            
             playerPlaying = NetworkManager._runner.ActivePlayers.Last();
         }
         else
