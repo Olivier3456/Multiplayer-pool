@@ -63,7 +63,7 @@ public class ScoreUIManager : MonoBehaviour
     {
         victoryText.text = winnerName + " win!";
         victoryText.rectTransform.position = new Vector3 (0, 0, 0);
-        victoryText.enabled = true;
+        victoryText.gameObject.SetActive(true);
 
         while (victoryText.rectTransform.position.y < 300)
         {

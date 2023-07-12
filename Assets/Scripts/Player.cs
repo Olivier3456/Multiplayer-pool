@@ -32,9 +32,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     }
 
 
-    
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
@@ -152,7 +151,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
 
     }
-
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
     {

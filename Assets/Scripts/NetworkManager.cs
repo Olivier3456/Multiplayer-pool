@@ -132,7 +132,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
 
 
-        if (runner.ActivePlayers.Count() == 1)
+        if (runner.ActivePlayers.Count() == 2)
         {
             _sceneLoader.LoadGameScene();
         }
@@ -146,6 +146,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSceneLoadDone(NetworkRunner runner)
     {
         Debug.Log("Scène chargée.");
+        if (SceneManager.GetActiveScene().buildIndex == 1)
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             if (runner.IsServer)
