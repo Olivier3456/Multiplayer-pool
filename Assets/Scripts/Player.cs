@@ -39,40 +39,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
 
 
-    private void Update()
-    {
-        if (SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            //Debug.Log("correct scene");
-
-            if (MyGameManager.spawnedCalled)
-            {
-                //Debug.Log("Player : MyGameManager.spawnedCalled = true");
-
-                if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying)
-                {
-                    //Debug.Log("NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying");
-                    //if ((Player.IsHostTurn && runner.IsServer)
-                    //|| (!Player.IsHostTurn && runner.IsClient))
-                    {
-                        if (Input.GetKeyDown(KeyCode.UpArrow))
-                        {
-                            //networkInput = input;
-                            //Debug.Log("GetKeyDown(KeyCode.UpArrow)");
-
-                            if (MyGameManager.checkCoroutine == null)
-                            {
-                                Rpc_BallHit();
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
-    }
-
-
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         //Debug.Log("there was an input");
@@ -118,23 +84,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     }
 
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void Rpc_BallHit(RpcInfo info = default)
-    {
-        Debug.Log("RPC");
-
-        //var data = new NetworkInputData();
-
-        //data.direction += _camera.transform.forward;
-
-        //networkInput.Set(data);
-
-        whiteBall.BallKicked(Camera.main.transform.forward);
-
-        MyGameManager.checkCoroutine = StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatedly());
-
-        Debug.Log("Methode WhiteBall/BallKicked appelée par Player/RpcBallHit");
-    }
+    
 
 
 
