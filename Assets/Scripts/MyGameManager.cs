@@ -19,6 +19,10 @@ public class MyGameManager : NetworkBehaviour
     [Networked(OnChanged = nameof(OnTurnChange))] public PlayerRef playerPlaying { get; set; }
 
 
+
+    public static bool spawnedCalled = false;
+
+
     private void Awake()
     {
         if (instance == null)
@@ -36,6 +40,7 @@ public class MyGameManager : NetworkBehaviour
     {
         Debug.Log("La méthode Spawned de MyGameManager a été appelée.");
         base.Spawned();
+        spawnedCalled = true;
     }
 
 

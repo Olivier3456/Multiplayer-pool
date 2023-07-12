@@ -45,23 +45,28 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            
-
             Debug.Log("correct scene");
-            if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying)
-            {
-                Debug.Log("NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying");
-                //if ((Player.IsHostTurn && runner.IsServer)
-                //|| (!Player.IsHostTurn && runner.IsClient))
-                {
-                    if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow))
-                    {
-                        //networkInput = input;
-                        Debug.Log("GetKeyDown(KeyCode.UpArrow)");
 
-                        Rpc_BallHit();
+            if (MyGameManager.spawnedCalled)
+            {
+                Debug.Log("Player : MyGameManager.spawnedCalled = true");
+                
+                if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying)
+                {
+                    Debug.Log("NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying");
+                    //if ((Player.IsHostTurn && runner.IsServer)
+                    //|| (!Player.IsHostTurn && runner.IsClient))
+                    {
+                        if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow))
+                        {
+                            //networkInput = input;
+                            Debug.Log("GetKeyDown(KeyCode.UpArrow)");
+
+                            Rpc_BallHit();
+                        }
                     }
                 }
+
             }
         }
     }
