@@ -18,4 +18,13 @@ public class BaseBall : NetworkBehaviour
     {
         MyGameManager.instance.AddBallToBallsList(this);
     }
+
+    protected void Update()
+    {
+        if(_rb.velocity.magnitude < 0.01)
+        {
+            _rb.velocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+        }
+    }
 }
