@@ -52,22 +52,17 @@ public class WhiteBall : BaseBall
 
                 if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying)
                 {
-                    //Debug.Log("NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying");
-                    //if ((Player.IsHostTurn && runner.IsServer)
-                    //|| (!Player.IsHostTurn && runner.IsClient))
+                    if (Input.GetKeyDown(KeyCode.UpArrow))
                     {
-                        if (Input.GetKeyDown(KeyCode.UpArrow))
+                        //networkInput = input;
+                        //Debug.Log("GetKeyDown(KeyCode.UpArrow)");
+
+                        if (MyGameManager.instance.CheckIfAllRigidbodiesAreSleeping())
                         {
-                            //networkInput = input;
-                            //Debug.Log("GetKeyDown(KeyCode.UpArrow)");
-
-
                             Rpc_BallHit();
-
                         }
                     }
                 }
-
             }
         }
     }
