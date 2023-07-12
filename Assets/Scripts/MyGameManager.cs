@@ -48,6 +48,7 @@ public class MyGameManager : NetworkBehaviour
 
     public bool CheckIfAllRigidbodiesAreSleeping()
     {
+        Debug.Log("Checking if sleeping");
         bool result = true;
         for (int i = 0; i < balls.Count; i++)
         {
@@ -60,15 +61,20 @@ public class MyGameManager : NetworkBehaviour
         return result;
     }
 
-    public IEnumerator CheckBallsMovementRepeatively()
+    public IEnumerator CheckBallsMovementRepeatedly()
     {
+        Debug.Log("Checking movement repeatedly");
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
 
         while (!CheckIfAllRigidbodiesAreSleeping())
         {
             yield return waitForSeconds;
         }
-
+        for(int i = 0; i < NetworkManager._runner.ActivePlayers.Count(); ++i)
+        {
+            Debug.Log("Player n " + i + ": " + NetworkManager._runner.ActivePlayers.ElementAt(i));
+        }
+        Debug.Log("playerPlaying: " + playerPlaying);
         if (playerPlaying == NetworkManager._runner.ActivePlayers.First())
         {
             playerPlaying = NetworkManager._runner.ActivePlayers.Last();

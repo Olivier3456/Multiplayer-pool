@@ -128,7 +128,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
         whiteBall.BallKicked(Camera.main.transform.forward);
 
-        StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatively());
+        StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatedly());
 
         Debug.Log("Methode WhiteBall/BallKicked appelée par Player/RpcBallHit");
     }
