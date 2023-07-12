@@ -23,7 +23,11 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     public WhiteBall whiteBall;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
 
+    }
     private void Start()
     {
         _camera = Camera.main;       

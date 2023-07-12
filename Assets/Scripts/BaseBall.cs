@@ -14,7 +14,7 @@ public class BaseBall : NetworkBehaviour
         _rb = GetComponent<Rigidbody>();        
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         MyGameManager.instance.AddBallToBallsList(this);
     }

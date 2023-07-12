@@ -133,7 +133,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
 
 
-        if (runner.ActivePlayers.Count() == 2)
+        if (runner.ActivePlayers.Count() == 1)
         {
             _sceneLoader.LoadGameScene();
         }

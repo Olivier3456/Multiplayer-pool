@@ -26,8 +26,9 @@ public class WhiteBall : BaseBall
         _rb.AddForce(direction * 5, ForceMode.Impulse);
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         players = FindObjectsByType<Player>(FindObjectsSortMode.None);
 
         for (int i = 0; i < players.Length; i++)
