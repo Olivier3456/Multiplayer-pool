@@ -61,10 +61,9 @@ public class WhiteBall : BaseBall
                             //networkInput = input;
                             //Debug.Log("GetKeyDown(KeyCode.UpArrow)");
 
-                            if (MyGameManager.checkCoroutine == null)
-                            {
-                                Rpc_BallHit();
-                            }
+
+                            Rpc_BallHit();
+
                         }
                     }
                 }
@@ -87,7 +86,7 @@ public class WhiteBall : BaseBall
 
         BallKicked(Camera.main.transform.forward);
 
-        MyGameManager.checkCoroutine = StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatedly());
+        StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatedly());
 
         Debug.Log("Methode WhiteBall/BallKicked appelée par Player/RpcBallHit");
     }
