@@ -130,7 +130,11 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             
-
+            if(runner.ActivePlayers.Count() ==2)
+            {
+                MyGameManager gm = _runner.Spawn(_gameManagerPrefab).GetComponent<MyGameManager>();
+                gm.playerPlaying = player;
+            }
             playerToSpawn = runner.Spawn(playerPrefab);
             playerToSpawn.playerRef = player;
             playerObjects.Add(playerToSpawn);
@@ -142,8 +146,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (runner.ActivePlayers.Count() == 2)
         {
-            MyGameManager gm = _runner.Spawn(_gameManagerPrefab).GetComponent<MyGameManager>();
-            gm.playerPlaying = player;
+
             _sceneLoader.LoadGameScene();
         }
     }
