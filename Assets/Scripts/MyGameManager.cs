@@ -51,7 +51,8 @@ public class MyGameManager : NetworkBehaviour
         bool result = true;
         for (int i = 0; i < balls.Count; i++)
         {
-            if (!balls[i].GetComponent<Rigidbody>().IsSleeping())
+
+            if (balls[i].GetComponent<Rigidbody>().velocity.magnitude > 0.09)
             {
                 result = false;
             }
