@@ -9,8 +9,6 @@ using UnityEngine.Windows;
 
 public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 {
-    
-
     public bool canPlay;
 
     private Camera _camera;
@@ -27,11 +25,12 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
         DontDestroyOnLoad(gameObject);
 
-    }
     private void Start()
     {
         _camera = Camera.main;       
     }
+
+
     
 
     private void Update()
