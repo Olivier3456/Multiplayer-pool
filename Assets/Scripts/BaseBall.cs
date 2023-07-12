@@ -19,8 +19,9 @@ public class BaseBall : NetworkBehaviour
         MyGameManager.instance.AddBallToBallsList(this);
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
+        print(_rb.velocity.magnitude);
         if(_rb.velocity.magnitude < 0.025)
         {
             _rb.velocity = Vector3.zero;

@@ -36,4 +36,9 @@ public class WhiteBall : BaseBall
             players[i].whiteBall = this;
         }
     }
+
+    protected override void Update()
+    {
+        base.Update();
+    }
 }
