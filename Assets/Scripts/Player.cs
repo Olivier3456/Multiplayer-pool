@@ -27,9 +27,17 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     }
 
     private void Start()
-    {
-        _camera = Camera.main;       
+    {        
+        _camera = Camera.main;
     }
+
+    public override void Spawned()
+    {
+        Debug.Log("La méthode Spawned de Player a été appelée.");
+        base.Spawned();
+        _camera = Camera.main;
+    }
+
 
 
 
@@ -37,6 +45,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
+            
+
             Debug.Log("correct scene");
             if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying)
             {

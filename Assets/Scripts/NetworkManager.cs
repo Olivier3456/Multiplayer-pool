@@ -38,8 +38,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private void Awake()
     {
-        _runner.Spawn(_gameManagerPrefab);
         _runner = GetComponent<NetworkRunner>();
+        _runner.Spawn(_gameManagerPrefab);
         DontDestroyOnLoad(gameObject);
 
 
