@@ -49,21 +49,18 @@ public class MyGameManager : NetworkBehaviour
     public bool CheckIfAllRigidbodiesAreSleeping()
     {
         Debug.Log("Checking if sleeping");
-        bool result = true;
+        
         for (int i = 0; i < balls.Count; i++)
         {
-
             if (balls[i].GetComponent<Rigidbody>().velocity.magnitude > 0.2)
             {
-                result = false;
+                return false;
             }
         }
-        return result;
+        return true;
     }
 
-    public static Coroutine checkCoroutine;
-
-
+    
     public IEnumerator CheckBallsMovementRepeatedly()
     {
         Debug.Log("Checking movement repeatedly");
