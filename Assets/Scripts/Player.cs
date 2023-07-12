@@ -24,6 +24,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+    }
 
     private void Start()
     {
