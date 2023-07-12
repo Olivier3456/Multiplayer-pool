@@ -39,13 +39,14 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private void Awake()
     {
         _runner = GetComponent<NetworkRunner>();
-        _runner.Spawn(_gameManagerPrefab);
+       
         DontDestroyOnLoad(gameObject);
 
 
         if (instance == null)
             instance = this;
     }
+
 
 
     public async void HostGame()
@@ -128,9 +129,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         Player playerToSpawn;
         if (runner.IsServer)
         {
+            _runner.Spawn(_gameManagerPrefab);
+
             playerToSpawn = runner.Spawn(playerPrefab);
             playerToSpawn.playerRef = player;
             playerObjects.Add(playerToSpawn);
+
+           
         }
 
 
@@ -150,38 +155,38 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log("Scène chargée.");
         if (SceneManager.GetActiveScene().buildIndex == 1)
-        if (SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            if (runner.IsServer)
+            if (SceneManager.GetActiveScene().buildIndex == 1)
             {
-                // Create a unique position for the player
-                Vector3 spawnPosition = new Vector3(33f, 4.7f, 5.2f);
-                //networkPlayerObjects[1] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.Last());
-                //Player.IsHostTurn = true;
-                runner.Spawn(_whiteBallPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
+                if (runner.IsServer)
+                {
+                    // Create a unique position for the player
+                    Vector3 spawnPosition = new Vector3(33f, 4.7f, 5.2f);
+                    //networkPlayerObjects[1] = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.Last());
+                    //Player.IsHostTurn = true;
+                    runner.Spawn(_whiteBallPrefab, spawnPosition, Quaternion.identity, runner.ActivePlayers.First());
 
 
 
-                // Keep track of the player avatars so we can remove it when they disconnect
+                    // Keep track of the player avatars so we can remove it when they disconnect
 
-                //_spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
+                    //_spawnedCharacters.Add(runner.ActivePlayers.Last(), networkPlayerObjects[1]);
 
 
-                // _gameManager.AddPlayerRigidbodyToBallsList(.gameObject.GetComponent<Rigidbody>());
+                    // _gameManager.AddPlayerRigidbodyToBallsList(.gameObject.GetComponent<Rigidbody>());
 
-                Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
+                    Debug.Log(runner.ActivePlayers.First().PlayerId + " joined the game.");
+
+                }
+                else
+                {
+
+                    // La balle a-t-elle eu le temps d'être spawnée quand cette méthode s'exécute chez le client ? Mettons un délai pour voir :
+                    StartCoroutine(WaitForPlayerToSpawn());
+                }
+                var canvas = GameObject.Find("TurnCanvas");
+
 
             }
-            else
-            {
-
-                // La balle a-t-elle eu le temps d'être spawnée quand cette méthode s'exécute chez le client ? Mettons un délai pour voir :
-                StartCoroutine(WaitForPlayerToSpawn());
-            }
-            var canvas = GameObject.Find("TurnCanvas");
-
-
-        }
     }
 
 
