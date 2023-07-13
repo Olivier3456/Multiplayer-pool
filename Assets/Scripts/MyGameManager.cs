@@ -67,7 +67,7 @@ public class MyGameManager : NetworkBehaviour
         if (ball.CompareTag("Yellow ball"))
         {
             yellowScore++;
-            if (NetworkManager.instance.playerObjects[0].playerColor == PlayerColor.NoneYet)
+            if (FindAnyObjectByType<Player>().playerColor == PlayerColor.NoneYet)
             {
                 if (NetworkManager.instance.GetLocalPlayerRef() == playerPlaying)
                 {
