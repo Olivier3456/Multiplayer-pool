@@ -64,8 +64,7 @@ public class MyGameManager : NetworkBehaviour
     {
         if (ball.CompareTag("Yellow ball"))
         {
-            yellowScore++;
-            UIManager.instance.YellowBallInAHole();
+            yellowScore++;           
 
             for (int i = 0; i < NetworkManager.instance.playerObjects.Count; i++)
             {
@@ -79,7 +78,9 @@ public class MyGameManager : NetworkBehaviour
                 }
             }
 
+            UIManager.instance.YellowBallInAHole();
             balls.Remove(ball.GetComponent<BaseBall>());
+            Destroy(ball);
         }
         else if (ball.CompareTag("Red ball"))
         {
@@ -99,6 +100,7 @@ public class MyGameManager : NetworkBehaviour
 
             UIManager.instance.RedBallInAHole();
             balls.Remove(ball.GetComponent<BaseBall>());
+            Destroy(ball);
         }
         else if (ball.CompareTag("Black ball"))
         {
