@@ -34,11 +34,19 @@ public class WhiteBall : BaseBall
     {
         base.OnEnable();
         MyGameManager.instance.whiteBall = this;
+        InvokeRepeating("UpdateLastPosition", 0, 0.3f);
 
+    }
+
+    private void UpdateLastPosition()
+    {
+        lastFramePosition = transform.position;
     }
     public bool CheckIfStopped()
     {
-        if (Vector3.Distance(transform.position, lastFramePosition) < 0.1 * Time.deltaTime)
+        print(Vector3.Distance(transform.position, lastFramePosition));
+
+        if (Vector3.Distance(transform.position, lastFramePosition) < 0.05)
         {
             return true;
         }
@@ -49,10 +57,6 @@ public class WhiteBall : BaseBall
     }
     protected void Update()
     {
-        //print(Vector3.Distance(transform.position, lastFramePosition) / Time.deltaTime);
-
-
-        lastFramePosition = transform.position;
 
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
