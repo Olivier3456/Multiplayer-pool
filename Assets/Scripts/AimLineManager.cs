@@ -31,7 +31,7 @@ public class AimLineManager : MonoBehaviour
             _reboundLineRenderer.transform.position = hit.point;
             _reboundLineRenderer.positionCount = 2;
             Vector3 newDirection = 2 * Vector3.Dot(hit.normal , hit.point - _firstLineRenderer.transform.position)* hit.normal - hit.point - _firstLineRenderer.transform.position;
-            _reboundLineRenderer.SetPositions(new Vector3[2] { Vector3.zero, newDirection.normalized });
+            _reboundLineRenderer.SetPositions(new Vector3[2] { Vector3.zero, newDirection.normalized * 3 });
             _firstLineRenderer.enabled = true;
         }
         else
