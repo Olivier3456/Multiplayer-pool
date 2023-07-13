@@ -11,7 +11,7 @@ public class WhiteBall : BaseBall
     public bool isStopped = false;
     public bool draging;
     private float dragOrigin;
-    private float dragDistance;
+    public float dragDistance;
 
 
     //public override void FixedUpdateNetwork()
@@ -80,7 +80,7 @@ public class WhiteBall : BaseBall
                     if(Input.GetMouseButtonUp(0))
                     {
                         dragDistance = Input.mousePosition.y - dragOrigin;
-                        Mathf.Clamp(dragDistance, 0, 120);
+                        dragDistance = Mathf.Clamp(dragDistance, -1000, 0);
                         Debug.Log("releasing with drag " + dragDistance);
                         draging = false;
                         hitForce = -dragDistance * 0.1f;
