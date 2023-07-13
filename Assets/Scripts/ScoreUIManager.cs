@@ -14,43 +14,53 @@ public class ScoreUIManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI victoryText;
 
-    public int nextRedBallToGray = 0;
-    public int nextYellowBallToGray = 0;
+    public int indexOfNextRedBallToGray = 0;
+    public int indexOfNextYellowBallToGray = 0;
 
-    public void RedBallIHole()
+    public static ScoreUIManager instance;
+
+    private void Start()
     {
-        if (nextRedBallToGray < redBalls.Count)
+        if (instance == null)
         {
-            GrayTheBall(redBalls[nextRedBallToGray]);
+            instance = this;
+        }
+    }
 
-            StartCoroutine(WhiteBallEffect(redBalls[nextRedBallToGray].rectTransform.position));
 
-            nextRedBallToGray++;
+    public void RedBallInAHole()
+    {
+        if (indexOfNextRedBallToGray < redBalls.Count)
+        {
+            GrayTheBall(redBalls[indexOfNextRedBallToGray]);
+
+            StartCoroutine(BallEffect(redBalls[indexOfNextRedBallToGray].rectTransform.position));
+
+            indexOfNextRedBallToGray++;
         }
         
 
-        if (nextRedBallToGray == redBalls.Count)
+        if (indexOfNextRedBallToGray == redBalls.Count)
         {
             StartCoroutine(VictoryTextEffect("Red"));
         }
     }
 
-    public void YellowBallIHole()
+    public void YellowBallInAHole()
     {
-        if (nextYellowBallToGray < yellowBalls.Count)
+        if (indexOfNextYellowBallToGray < yellowBalls.Count)
         {
-            GrayTheBall(yellowBalls[nextYellowBallToGray]);
+            GrayTheBall(yellowBalls[indexOfNextYellowBallToGray]);
 
-            StartCoroutine(WhiteBallEffect(yellowBalls[nextYellowBallToGray].rectTransform.position));
+            StartCoroutine(BallEffect(yellowBalls[indexOfNextYellowBallToGray].rectTransform.position));
 
-            nextYellowBallToGray++;
+            indexOfNextYellowBallToGray++;
         }
         
-        if (nextYellowBallToGray == yellowBalls.Count)
+        if (indexOfNextYellowBallToGray == yellowBalls.Count)
         {
             StartCoroutine(VictoryTextEffect("Yellow"));
         }
-
     }
 
     private void GrayTheBall(Image ball)
@@ -62,7 +72,7 @@ public class ScoreUIManager : MonoBehaviour
     IEnumerator VictoryTextEffect(string winnerName)
     {
         victoryText.text = winnerName + " win!";
-        victoryText.rectTransform.position = new Vector3 (0, 0, 0);
+        victoryText.rectTransform.position = new Vector3 (0.5f, 0.5f, 0.5f);
         victoryText.gameObject.SetActive(true);
 
         while (victoryText.rectTransform.position.y < 300)
@@ -70,12 +80,10 @@ public class ScoreUIManager : MonoBehaviour
             victoryText.rectTransform.position = new Vector3(0, victoryText.rectTransform.position.y + Time.deltaTime, 0);
             yield return null;
         }
-
-
     }
 
 
-    IEnumerator WhiteBallEffect(Vector2 position)
+    IEnumerator BallEffect(Vector2 position)
     {
         whiteBall.rectTransform.position = position;
         float a = 1;
