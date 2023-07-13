@@ -22,7 +22,7 @@ public class AimLineManager : MonoBehaviour
     {
         if (showLine)
         {
-            Debug.Log("Direction : " + Vector3.ProjectOnPlane(_whiteBall.position - _mainCamera.transform.position, Vector3.up));
+            //Debug.Log("Direction : " + Vector3.ProjectOnPlane(_whiteBall.position - _mainCamera.transform.position, Vector3.up));
             Physics.Raycast(_whiteBall.position, Vector3.ProjectOnPlane(_whiteBall.position - _mainCamera.transform.position, Vector3.up), out var hit);
             cylinder.transform.position = hit.point;
             _firstLineRenderer.positionCount = 2;

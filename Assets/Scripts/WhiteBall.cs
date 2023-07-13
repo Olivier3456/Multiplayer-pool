@@ -6,10 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class WhiteBall : BaseBall
 {
-    Player[] players;
     float hitForce = 10;
     Vector3 lastFramePosition;
     public bool isStopped = false;
+    public bool draging;
+    private float dragOrigin;
+    private float dragDistance;
 
 
     //public override void FixedUpdateNetwork()
@@ -66,18 +68,25 @@ public class WhiteBall : BaseBall
             {
                 //Debug.Log("Player : MyGameManager.spawnedCalled = true");
 
-                if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying)
+                if (NetworkManager.instance.GetLocalPlayerRef() == MyGameManager.instance.playerPlaying && !MyGameManager.instance.playedThisTurn)
                 {
-                    if (Input.GetKeyDown(KeyCode.UpArrow))
+                    if (Input.GetMouseButtonDown(0))
                     {
-                        //networkInput = input;
-                        //Debug.Log("GetKeyDown(KeyCode.UpArrow)");
-
-                        if (!MyGameManager.instance.playedThisTurn)
-                        {
-                            Rpc_BallHit(Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up) * hitForce);
-                        }
+                        Debug.Log("draging");
+                        draging = true;
+                        dragOrigin = Input.mousePosition.y;
                     }
+
+                    if(Input.GetMouseButtonUp(0))
+                    {
+                        dragDistance = Input.mousePosition.y - dragOrigin;
+                        Mathf.Clamp(dragDistance, 0, 120);
+                        Debug.Log("releasing with drag " + dragDistance);
+                        draging = false;
+                        hitForce = -dragDistance * 0.1f;
+                        Rpc_BallHit(Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up) * hitForce);
+                    }
+                    
                 }
             }
         }
