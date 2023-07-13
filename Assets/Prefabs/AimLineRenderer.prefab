@@ -33,7 +33,7 @@ Transform:
   - {fileID: 780832470240789584}
   - {fileID: 9172775001963568139}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &9099978578440010448
 LineRenderer:
@@ -154,7 +154,7 @@ MonoBehaviour:
   _firstLineRenderer: {fileID: 9099978578440010448}
   _reboundLineRenderer: {fileID: 594333229851999715}
   cylinder: {fileID: 8914898850157123942}
-  showLine: 0
+  showLine: 1
 --- !u!1 &4494389481255171911
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,7 +302,6 @@ GameObject:
   - component: {fileID: 780832470240789584}
   - component: {fileID: 1937180135263349058}
   - component: {fileID: 9127409773816017109}
-  - component: {fileID: 876739045595639802}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -375,26 +374,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &876739045595639802
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8914898850157123942}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}

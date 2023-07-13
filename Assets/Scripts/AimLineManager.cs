@@ -9,7 +9,7 @@ public class AimLineManager : MonoBehaviour
     [SerializeField] LineRenderer _reboundLineRenderer;
     
     Camera _mainCamera => Camera.main;
-    Transform _whiteBall => MyGameManager.instance.balls.Where(ball => ball.GetComponent<WhiteBall>() != null).First().transform;
+    Transform _whiteBall => MyGameManager.instance.whiteBall.transform;
 
     public GameObject cylinder;
 
@@ -38,10 +38,5 @@ public class AimLineManager : MonoBehaviour
         { 
             enabled = false;
         }
-    }
-
-    void DrawCircle()
-    {
-
     }
 }
