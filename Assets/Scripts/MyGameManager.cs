@@ -71,11 +71,13 @@ public class MyGameManager : NetworkBehaviour
                 if (NetworkManager.instance.playerObjects[i].playerRef == playerPlaying)
                 {
                     NetworkManager.instance.playerObjects[i].playerColor = PlayerColor.Yellow;
-                    
+                    UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
+
                 }
                 else
                 {
                     NetworkManager.instance.playerObjects[i].playerColor = PlayerColor.Red;
+                    UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Red);
                 }
             }
 
@@ -92,10 +94,12 @@ public class MyGameManager : NetworkBehaviour
                 if (NetworkManager.instance.playerObjects[i].playerRef == playerPlaying)
                 {
                     NetworkManager.instance.playerObjects[i].playerColor = PlayerColor.Red;
+                    UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Red);
                 }
                 else
                 {
                     NetworkManager.instance.playerObjects[i].playerColor = PlayerColor.Yellow;
+                    UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
                 }
             }
 

@@ -19,7 +19,8 @@ public class UIManager : MonoBehaviour
 
     public static UIManager instance;
 
-    [SerializeField] private Image playerColorMarker;
+    [SerializeField] private Image playerColorMarkerRed;
+    [SerializeField] private Image playerColorMarkerYellow;
 
 
     [SerializeField] AudioSource audiosource;
@@ -34,16 +35,16 @@ public class UIManager : MonoBehaviour
 
 
 
-    public void SetPlayerColorMarkerPosition(PlayerColor color)
+    public void DisplayPlayerColorMarker(PlayerColor color)
     {
-        playerColorMarker.gameObject.SetActive(true);
+        
         if (color == PlayerColor.Yellow)
         {
-            playerColorMarker.rectTransform.position = new Vector3(-284.8f, 167.3f, -15.5f);
+            playerColorMarkerYellow.gameObject.SetActive(true);            
         }
         else
         {
-            playerColorMarker.rectTransform.position = new Vector3(282.9f, 167.3f, -15.5f);
+            playerColorMarkerRed.gameObject.SetActive(true);         
         }
     }
 
