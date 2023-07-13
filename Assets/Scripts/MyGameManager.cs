@@ -17,6 +17,7 @@ public class MyGameManager : NetworkBehaviour
     public static MyGameManager instance;
 
     [Networked(OnChanged = nameof(OnTurnChange))] public PlayerRef playerPlaying { get; set; }
+    [Networked] public bool playedThisTurn { get; set; }
 
 
 
@@ -52,7 +53,7 @@ public class MyGameManager : NetworkBehaviour
         
         for (int i = 0; i < balls.Count; i++)
         {
-            if (balls[i].GetComponent<Rigidbody>().velocity.magnitude > 0.2)
+            if (!balls[i].isStopped)
             {
                 return false;
             }
@@ -84,7 +85,7 @@ public class MyGameManager : NetworkBehaviour
         {
             playerPlaying = NetworkManager._runner.ActivePlayers.First();
         }
-
+        playedThisTurn = false;
         yield return null;
     }
 

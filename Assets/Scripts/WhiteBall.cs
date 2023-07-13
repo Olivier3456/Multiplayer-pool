@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class WhiteBall : BaseBall
 {
     Player[] players;
+    float hitForce = 10;
 
 
     //public override void FixedUpdateNetwork()
@@ -24,7 +25,7 @@ public class WhiteBall : BaseBall
     public void BallKicked(Vector3 direction)
     {
         direction.Normalize();
-        _rb.AddForce(direction * 15, ForceMode.Impulse);
+        _rb.AddForce(direction, ForceMode.Impulse);
     }
 
     protected override void OnEnable()
@@ -57,9 +58,9 @@ public class WhiteBall : BaseBall
                         //networkInput = input;
                         //Debug.Log("GetKeyDown(KeyCode.UpArrow)");
 
-                        if (MyGameManager.instance.CheckIfAllRigidbodiesAreSleeping())
+                        if (!MyGameManager.instance.playedThisTurn)
                         {
-                            Rpc_BallHit();
+                            Rpc_BallHit(Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up) * hitForce);
                         }
                     }
                 }
@@ -69,9 +70,11 @@ public class WhiteBall : BaseBall
 
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void Rpc_BallHit(RpcInfo info = default)
+    public void Rpc_BallHit(Vector3 direction)
     {
         Debug.Log("RPC");
+
+        MyGameManager.instance.playedThisTurn = true;
 
         //var data = new NetworkInputData();
 
@@ -79,7 +82,7 @@ public class WhiteBall : BaseBall
 
         //networkInput.Set(data);
 
-        BallKicked(Camera.main.transform.forward);
+        BallKicked(direction);
 
         StartCoroutine(MyGameManager.instance.CheckBallsMovementRepeatedly());
 
