@@ -29,12 +29,12 @@ public class MyGameManager : NetworkBehaviour
     private void Awake()
     {
         if (instance == null)
-        instance = this;
+            instance = this;
 
         DontDestroyOnLoad(gameObject);
     }
 
-   
+
     public override void Spawned()
     {
         Debug.Log("La méthode Spawned de MyGameManager a été appelée.");
@@ -48,7 +48,33 @@ public class MyGameManager : NetworkBehaviour
     {
         balls.Add(baseBall);
     }
- 
+
+    public void BallInAHole(GameObject ball)
+    {
+        if (ball.CompareTag("Yellow ball"))
+        {
+            yellowScore++;
+            ScoreUIManager.instance.YellowBallInAHole();
+            balls.Remove(ball.GetComponent<BaseBall>());
+        }
+        else if (ball.CompareTag("Red ball"))
+        {
+            redScore++;
+            ScoreUIManager.instance.RedBallInAHole();
+            balls.Remove(ball.GetComponent<BaseBall>());
+        }
+        else if (ball.CompareTag("Black ball"))
+        {
+
+        }
+        else if (ball.CompareTag("White ball"))
+        {
+
+        }
+    }
+
+
+
     public IEnumerator CheckBallsMovementRepeatedly()
     {
         Debug.Log("Checking movement repeatedly");
@@ -65,7 +91,7 @@ public class MyGameManager : NetworkBehaviour
         Debug.Log("playerPlaying: " + playerPlaying);
         if (playerPlaying == NetworkManager._runner.ActivePlayers.First())
         {
-            
+
             playerPlaying = NetworkManager._runner.ActivePlayers.Last();
         }
         else
@@ -106,7 +132,7 @@ public class MyGameManager : NetworkBehaviour
     static void OnTurnChange(Changed<MyGameManager> changed)
     {
         var canvas = GameObject.Find("TurnCanvas");
-        
+
         //Player ourPlayer = FindAnyObjectByType<Player>();
 
 
@@ -114,11 +140,11 @@ public class MyGameManager : NetworkBehaviour
         {
             //changed.Behaviour.networkPlayerObjects[0].AssignInputAuthority(_runner.ActivePlayers.Last());
             //if (_runner.IsServer)
-            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";            
+            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your turn";
         }
         else
         {
-            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";            
+            canvas.GetComponentInChildren<TextMeshProUGUI>().text = "it's your opponent's turn";
         }
     }
 }
