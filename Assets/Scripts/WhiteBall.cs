@@ -13,6 +13,8 @@ public class WhiteBall : BaseBall
     private float dragOrigin;
     public float dragDistance;
 
+    private Vector3 whiteBallRespawnPosition = new Vector3(33f, 4.7f, 5.2f);
+
 
     //public override void FixedUpdateNetwork()
     //{
@@ -56,6 +58,11 @@ public class WhiteBall : BaseBall
         {
             return false;
         }
+    }
+
+    public void Replace()
+    {
+        _rb.MovePosition(whiteBallRespawnPosition);
     }
     protected void Update()
     {

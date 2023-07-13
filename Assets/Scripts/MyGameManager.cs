@@ -30,6 +30,7 @@ public class MyGameManager : NetworkBehaviour
     public static bool spawnedCalled = false;
 
     private bool faultLastTurn;
+    private bool enteredOwnBall;
 
     private void Awake()
     {
@@ -113,7 +114,7 @@ public class MyGameManager : NetworkBehaviour
         }
         else if (ball.CompareTag("White ball"))
         {
-
+            whiteBall.Replace();
         }
     }
 
@@ -133,12 +134,12 @@ public class MyGameManager : NetworkBehaviour
         //    Debug.Log("Player n " + i + ": " + NetworkManager._runner.ActivePlayers.ElementAt(i));
         //}
         //Debug.Log("playerPlaying: " + playerPlaying);
-
+        NextTurn();
     }
 
     private void NextTurn()
     {
-        if (!faultLastTurn)
+        if (!faultLastTurn && !enteredOwnBall)
         {
 
 
