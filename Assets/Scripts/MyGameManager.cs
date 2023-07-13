@@ -66,7 +66,7 @@ public class MyGameManager : NetworkBehaviour
         {
             yellowScore++;           
 
-            if (NetworkManager.instance.playerObjects[i].playerRef == playerPlaying)
+            if (NetworkManager.instance.GetLocalPlayerRef() == playerPlaying)
             {
                 NetworkManager.instance.playerObjects.Where(player => player.playerRef == playerPlaying).First().playerColor = PlayerColor.Yellow;
                 UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
