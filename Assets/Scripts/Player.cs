@@ -31,7 +31,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
         DontDestroyOnLoad(gameObject);
 
-        playerColor = PlayerColor.NoneYet;
     }
 
 
@@ -41,6 +40,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         Debug.Log("La méthode Spawned de Player a été appelée.");
         base.Spawned();
         //   _camera = Camera.main;
+        playerColor = PlayerColor.NoneYet;
     }
 
 
