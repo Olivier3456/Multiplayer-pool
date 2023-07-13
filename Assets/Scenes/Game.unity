@@ -5886,11 +5886,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 746751940263583718, guid: 5ca57e71e6a1d8948851985d40fab6ff,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1336716147572799401, guid: 5ca57e71e6a1d8948851985d40fab6ff,
         type: 3}
       propertyPath: m_Pivot.x
@@ -5996,29 +5991,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4378427591123415391, guid: 5ca57e71e6a1d8948851985d40fab6ff,
+    - target: {fileID: 2661603759458999184, guid: 5ca57e71e6a1d8948851985d40fab6ff,
         type: 3}
-      propertyPath: m_Name
-      value: Score UI
+      propertyPath: m_AnchoredPosition.x
+      value: 282.9
       objectReference: {fileID: 0}
-    - target: {fileID: 6497585289218680705, guid: 5ca57e71e6a1d8948851985d40fab6ff,
+    - target: {fileID: 2895732497870122600, guid: 5ca57e71e6a1d8948851985d40fab6ff,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7824207722589849357, guid: 5ca57e71e6a1d8948851985d40fab6ff,
+    - target: {fileID: 4378427591123415391, guid: 5ca57e71e6a1d8948851985d40fab6ff,
         type: 3}
-      propertyPath: audiosource
-      value: 
-      objectReference: {fileID: 8294987957564075161}
+      propertyPath: m_Name
+      value: UI
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ca57e71e6a1d8948851985d40fab6ff, type: 3}
---- !u!82 &8294987957564075161 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 746751940263583718, guid: 5ca57e71e6a1d8948851985d40fab6ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 8294987957564075160}
-  m_PrefabAsset: {fileID: 0}

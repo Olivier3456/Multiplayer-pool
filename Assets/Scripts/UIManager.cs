@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreUIManager : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
     [SerializeField] List<Image> redBalls;
     [SerializeField] List<Image> yellowBalls;
@@ -17,7 +17,10 @@ public class ScoreUIManager : MonoBehaviour
     public int indexOfNextRedBallToGray = 0;
     public int indexOfNextYellowBallToGray = 0;
 
-    public static ScoreUIManager instance;
+    public static UIManager instance;
+
+    [SerializeField] private Image playerColorMarker;
+
 
     [SerializeField] AudioSource audiosource;
 
@@ -28,6 +31,22 @@ public class ScoreUIManager : MonoBehaviour
             instance = this;
         }
     }
+
+
+
+    public void SetPlayerColorMarkerPosition(PlayerColor color)
+    {
+        playerColorMarker.gameObject.SetActive(true);
+        if (color == PlayerColor.Yellow)
+        {
+            playerColorMarker.rectTransform.position = new Vector3(-284.8f, 167.3f, -15.5f);
+        }
+        else
+        {
+            playerColorMarker.rectTransform.position = new Vector3(282.9f, 167.3f, -15.5f);
+        }
+    }
+
 
 
     public void RedBallInAHole()

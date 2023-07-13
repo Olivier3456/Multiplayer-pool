@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon.StructWrapping;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,9 @@ public class MyGameManager : NetworkBehaviour
     [Networked] public bool playedThisTurn { get; set; }
 
 
+    public bool actualPlayerPlaysAgain;
+    public bool actualnextPlayerPlaysTwice;
+
 
     public static bool spawnedCalled = false;
 
@@ -44,6 +48,13 @@ public class MyGameManager : NetworkBehaviour
 
 
 
+    public void BallHitByWhiteBall(BaseBall ballHit)
+    {
+        
+    }
+
+
+
     public void AddBallToBallsList(BaseBall baseBall)
     {
         balls.Add(baseBall);
@@ -54,13 +65,39 @@ public class MyGameManager : NetworkBehaviour
         if (ball.CompareTag("Yellow ball"))
         {
             yellowScore++;
-            ScoreUIManager.instance.YellowBallInAHole();
+            UIManager.instance.YellowBallInAHole();
+
+            for (int i = 0; i < NetworkManager.instance.playerObjects.Count; i++)
+            {
+                if (NetworkManager.instance.playerObjects[i].playerRef == playerPlaying)
+                {
+                    playerPlaying.Get<Player>().playerColor = PlayerColor.Yellow;
+                }
+                else
+                {
+                    playerPlaying.Get<Player>().playerColor = PlayerColor.Red;
+                }
+            }
+
             balls.Remove(ball.GetComponent<BaseBall>());
         }
         else if (ball.CompareTag("Red ball"))
         {
             redScore++;
-            ScoreUIManager.instance.RedBallInAHole();
+
+            for (int i = 0; i < NetworkManager.instance.playerObjects.Count; i++)
+            {
+                if (NetworkManager.instance.playerObjects[i].playerRef == playerPlaying)
+                {
+                    playerPlaying.Get<Player>().playerColor = PlayerColor.Red;
+                }
+                else
+                {
+                    playerPlaying.Get<Player>().playerColor = PlayerColor.Yellow;
+                }
+            }
+
+            UIManager.instance.RedBallInAHole();
             balls.Remove(ball.GetComponent<BaseBall>());
         }
         else if (ball.CompareTag("Black ball"))
@@ -103,30 +140,30 @@ public class MyGameManager : NetworkBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other)
-    {
-        balls.Remove(other.gameObject.GetComponent<BaseBall>());
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    balls.Remove(other.gameObject.GetComponent<BaseBall>());
 
-        if (other.tag == "red")
-        {
-            redScore++;
-        }
-        if (other.tag == "yellow")
-        {
-            yellowScore++;
-        }
-        if (other.tag == "black")
-        {
-            if (redScore == 7 && redIsPlaying)
-            {
-                //win
-            }
-        }
-        if (other.tag == "white")
-        {
-            //fault
-        }
-    }
+    //    if (other.tag == "red")
+    //    {
+    //        redScore++;
+    //    }
+    //    if (other.tag == "yellow")
+    //    {
+    //        yellowScore++;
+    //    }
+    //    if (other.tag == "black")
+    //    {
+    //        if (redScore == 7 && redIsPlaying)
+    //        {
+    //            //win
+    //        }
+    //    }
+    //    if (other.tag == "white")
+    //    {
+    //        //fault
+    //    }
+    //}
 
 
     static void OnTurnChange(Changed<MyGameManager> changed)
