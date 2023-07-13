@@ -19,6 +19,8 @@ public class ScoreUIManager : MonoBehaviour
 
     public static ScoreUIManager instance;
 
+    [SerializeField] AudioSource audiosource;
+
     private void Start()
     {
         if (instance == null)
@@ -32,6 +34,8 @@ public class ScoreUIManager : MonoBehaviour
     {
         if (indexOfNextRedBallToGray < redBalls.Count)
         {
+            audiosource.Play();
+
             GrayTheBall(redBalls[indexOfNextRedBallToGray]);
 
             StartCoroutine(BallEffect(redBalls[indexOfNextRedBallToGray].rectTransform.position));
@@ -50,6 +54,8 @@ public class ScoreUIManager : MonoBehaviour
     {
         if (indexOfNextYellowBallToGray < yellowBalls.Count)
         {
+            audiosource.Play();
+
             GrayTheBall(yellowBalls[indexOfNextYellowBallToGray]);
 
             StartCoroutine(BallEffect(yellowBalls[indexOfNextYellowBallToGray].rectTransform.position));

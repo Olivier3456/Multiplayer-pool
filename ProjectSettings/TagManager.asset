@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Red ball
+  - Yellow ball
+  - White ball
+  - Black ball
   layers:
   - Default
   - TransparentFX

@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: -3725667453367057511}
   m_Layer: 0
   m_Name: White Ball Prefab
-  m_TagString: Untagged
+  m_TagString: White ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -158,6 +158,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  isStopped: 0
+  draging: 0
 --- !u!54 &-8183463376888166881
 Rigidbody:
   m_ObjectHideFlags: 0
