@@ -73,8 +73,7 @@ public class MyGameManager : NetworkBehaviour
                 {
                     if(NetworkManager.instance.IsServer())
                         NetworkManager.instance.playerObjects.Where(player => player.playerRef == playerPlaying).First().playerColor = PlayerColor.Yellow;
-                    else
-                        FindAnyObjectByType<Player>().playerColor = PlayerColor.Yellow;
+
                     UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
 
                 }
@@ -82,8 +81,7 @@ public class MyGameManager : NetworkBehaviour
                 {
                     if (NetworkManager.instance.IsServer())
                         NetworkManager.instance.playerObjects.Where(player => player.playerRef != playerPlaying).First().playerColor = PlayerColor.Red;
-                    else
-                        FindAnyObjectByType<Player>().playerColor = PlayerColor.Red;
+
                     UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Red);
                 }
             }
@@ -102,16 +100,14 @@ public class MyGameManager : NetworkBehaviour
                 {
                     if (NetworkManager.instance.IsServer())
                         NetworkManager.instance.playerObjects.Where(player => player.playerRef == playerPlaying).First().playerColor = PlayerColor.Red;
-                    else
-                        FindAnyObjectByType<Player>().playerColor = PlayerColor.Red;
+
                     UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Red);
                 }
                 else
                 {
                     if (NetworkManager.instance.IsServer())
                         NetworkManager.instance.playerObjects.Where(player => player.playerRef != playerPlaying).First().playerColor = PlayerColor.Yellow;
-                    else
-                        FindAnyObjectByType<Player>().playerColor = PlayerColor.Yellow;
+
                     UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
                 }
             }

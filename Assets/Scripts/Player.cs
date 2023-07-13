@@ -15,7 +15,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 {
     public bool canPlay;
 
-    public PlayerColor playerColor;
+    [Networked] public PlayerColor playerColor { get; set; }
 
     //private Camera _camera;
 
