@@ -66,20 +66,18 @@ public class MyGameManager : NetworkBehaviour
         {
             yellowScore++;           
 
-            for (int i = 0; i < NetworkManager.instance.playerObjects.Count; i++)
+            if (NetworkManager.instance.playerObjects[i].playerRef == playerPlaying)
             {
-                if (NetworkManager.instance.playerObjects[i].playerRef == playerPlaying)
-                {
-                    NetworkManager.instance.playerObjects[i].playerColor = PlayerColor.Yellow;
-                    UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
+                NetworkManager.instance.playerObjects.Where(player => player.playerRef == playerPlaying).First().playerColor = PlayerColor.Yellow;
+                UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
 
-                }
-                else
-                {
-                    NetworkManager.instance.playerObjects[i].playerColor = PlayerColor.Red;
-                    UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Red);
-                }
             }
+            else
+            {
+                NetworkManager.instance.playerObjects.Where(player => player.playerRef != playerPlaying).First().playerColor = PlayerColor.Red;
+                UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Red);
+            }
+            
 
             UIManager.instance.YellowBallInAHole();
             balls.Remove(ball.GetComponent<BaseBall>());
@@ -89,19 +87,18 @@ public class MyGameManager : NetworkBehaviour
         {
             redScore++;
 
-            for (int i = 0; i < NetworkManager.instance.playerObjects.Count; i++)
+         
+            if (NetworkManager.instance.GetLocalPlayerRef() == playerPlaying)
             {
-                if (NetworkManager.instance.playerObjects[i].playerRef == playerPlaying)
-                {
-                    NetworkManager.instance.playerObjects[i].playerColor = PlayerColor.Red;
-                    UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Red);
-                }
-                else
-                {
-                    NetworkManager.instance.playerObjects[i].playerColor = PlayerColor.Yellow;
-                    UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
-                }
+                NetworkManager.instance.playerObjects.Where(player => player.playerRef == playerPlaying).First().playerColor = PlayerColor.Red;
+                UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Red);
             }
+            else
+            {
+                NetworkManager.instance.playerObjects.Where(player => player.playerRef != playerPlaying).First().playerColor = PlayerColor.Yellow;
+                UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
+            }
+            
 
             UIManager.instance.RedBallInAHole();
             balls.Remove(ball.GetComponent<BaseBall>());
