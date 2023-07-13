@@ -29,6 +29,7 @@ public class MyGameManager : NetworkBehaviour
 
     public static bool spawnedCalled = false;
 
+    private bool faultLastTurn;
 
     private void Awake()
     {
@@ -127,25 +128,37 @@ public class MyGameManager : NetworkBehaviour
             yield return waitForSeconds;
         } while (!whiteBall.CheckIfStopped());
 
-        for (int i = 0; i < NetworkManager._runner.ActivePlayers.Count(); ++i)
-        {
-            Debug.Log("Player n " + i + ": " + NetworkManager._runner.ActivePlayers.ElementAt(i));
-        }
-        Debug.Log("playerPlaying: " + playerPlaying);
-        if (playerPlaying == NetworkManager._runner.ActivePlayers.First())
+        //for (int i = 0; i < NetworkManager._runner.ActivePlayers.Count(); ++i)
+        //{
+        //    Debug.Log("Player n " + i + ": " + NetworkManager._runner.ActivePlayers.ElementAt(i));
+        //}
+        //Debug.Log("playerPlaying: " + playerPlaying);
+
+    }
+
+    private void NextTurn()
+    {
+        if (!faultLastTurn)
         {
 
-            playerPlaying = NetworkManager._runner.ActivePlayers.Last();
+
+            if (playerPlaying == NetworkManager._runner.ActivePlayers.First())
+            {
+
+                playerPlaying = NetworkManager._runner.ActivePlayers.Last();
+            }
+            else
+            {
+                playerPlaying = NetworkManager._runner.ActivePlayers.First();
+            }
+            playedThisTurn = false;
         }
         else
         {
-            playerPlaying = NetworkManager._runner.ActivePlayers.First();
+            playedThisTurn = false;
+            faultLastTurn = false;
         }
-        playedThisTurn = false;
-        yield return null;
     }
-
-
     //private void OnTriggerEnter(Collider other)
     //{
     //    balls.Remove(other.gameObject.GetComponent<BaseBall>());
