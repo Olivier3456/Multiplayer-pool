@@ -6,6 +6,10 @@ public class HoleBehaviour : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        MyGameManager.instance.BallInAHole(other.gameObject);
+        if (other.tag.Contains("Ball"))
+        {
+            MyGameManager.instance.BallInAHole(other.gameObject);
+            Debug.Log(other.gameObject.name + " est tombée dans un trou.");
+        }
     }
 }
