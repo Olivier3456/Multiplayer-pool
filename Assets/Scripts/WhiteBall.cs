@@ -84,6 +84,7 @@ public class WhiteBall : BaseBall
                         Debug.Log("releasing with drag " + dragDistance);
                         draging = false;
                         hitForce = -dragDistance * 0.1f;
+                        _as.Play();
                         Rpc_BallHit(Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up) * hitForce);
                     }
 
