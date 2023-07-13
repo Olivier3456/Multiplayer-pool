@@ -35,7 +35,7 @@ public class CameraRotation : MonoBehaviour
             // Mise à jour de la position de la caméra en fonction de la rotation
             desiredHorizontalAngle += horizontal;
             desiredVerticalAngle -= vertical;
-            Mathf.Clamp(desiredVerticalAngle, -30, 30);
+            desiredVerticalAngle = Mathf.Clamp(desiredVerticalAngle, -30, 30);
             Quaternion rotation = Quaternion.Euler(desiredVerticalAngle, desiredHorizontalAngle, 0);
             transform.position = targetTransform.position - (rotation * offset);
 
