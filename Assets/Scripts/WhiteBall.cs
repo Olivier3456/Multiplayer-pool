@@ -28,7 +28,7 @@ public class WhiteBall : BaseBall
 
     public void BallKicked(Vector3 direction)
     {
-        
+
         _rb.AddForce(direction, ForceMode.Impulse);
     }
 
@@ -77,7 +77,7 @@ public class WhiteBall : BaseBall
                         dragOrigin = Input.mousePosition.y;
                     }
 
-                    if(Input.GetMouseButtonUp(0))
+                    if (Input.GetMouseButtonUp(0))
                     {
                         dragDistance = Input.mousePosition.y - dragOrigin;
                         dragDistance = Mathf.Clamp(dragDistance, -1000, 0);
@@ -86,9 +86,18 @@ public class WhiteBall : BaseBall
                         hitForce = -dragDistance * 0.1f;
                         Rpc_BallHit(Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up) * hitForce);
                     }
-                    
+
                 }
             }
+        }
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag.Contains("ball"))
+        {
+            MyGameManager.instance.BallHitByWhiteBall(collision.gameObject.GetComponent<BaseBall>());
         }
     }
 

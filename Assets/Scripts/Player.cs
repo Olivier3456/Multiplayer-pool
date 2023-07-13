@@ -8,9 +8,14 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Windows;
 using Input = UnityEngine.Input;
 
+public enum PlayerColor { Red, Yellow, NoneYet }
+
+
 public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 {
     public bool canPlay;
+
+    public PlayerColor playerColor;
 
     //private Camera _camera;
 
@@ -25,6 +30,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
+        playerColor = PlayerColor.NoneYet;
     }
 
 
