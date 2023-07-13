@@ -8,6 +8,8 @@ public class WhiteBall : BaseBall
 {
     Player[] players;
     float hitForce = 10;
+    Vector3 lastFramePosition;
+    public bool isStopped = false;
 
 
     //public override void FixedUpdateNetwork()
@@ -24,24 +26,33 @@ public class WhiteBall : BaseBall
 
     public void BallKicked(Vector3 direction)
     {
-        direction.Normalize();
+        
         _rb.AddForce(direction, ForceMode.Impulse);
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        players = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        MyGameManager.instance.whiteBall = this;
 
-        for (int i = 0; i < players.Length; i++)
+    }
+    public bool CheckIfStopped()
+    {
+        if (Vector3.Distance(transform.position, lastFramePosition) < 0.1 * Time.deltaTime)
         {
-            players[i].whiteBall = this;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
-
-    protected override void Update()
+    protected void Update()
     {
-        base.Update();
+        //print(Vector3.Distance(transform.position, lastFramePosition) / Time.deltaTime);
+
+
+        lastFramePosition = transform.position;
 
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {

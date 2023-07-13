@@ -12,6 +12,8 @@ public class MyGameManager : NetworkBehaviour
     private int yellowScore;
     private bool redIsPlaying;
 
+    public WhiteBall whiteBall;
+
     public List<BaseBall> balls = new List<BaseBall>();
 
     public static MyGameManager instance;
@@ -46,22 +48,7 @@ public class MyGameManager : NetworkBehaviour
     {
         balls.Add(baseBall);
     }
-
-    public bool CheckIfAllRigidbodiesAreSleeping()
-    {
-        Debug.Log("Checking if sleeping");
-        
-        for (int i = 0; i < balls.Count; i++)
-        {
-            if (!balls[i].isStopped)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    
+ 
     public IEnumerator CheckBallsMovementRepeatedly()
     {
         Debug.Log("Checking movement repeatedly");
@@ -69,7 +56,7 @@ public class MyGameManager : NetworkBehaviour
         do
         {
             yield return waitForSeconds;
-        } while (!CheckIfAllRigidbodiesAreSleeping());
+        } while (!whiteBall.CheckIfStopped());
 
         for (int i = 0; i < NetworkManager._runner.ActivePlayers.Count(); ++i)
         {
