@@ -71,13 +71,17 @@ public class MyGameManager : NetworkBehaviour
             {
                 if (NetworkManager.instance.GetLocalPlayerRef() == playerPlaying)
                 {
-                    NetworkManager.instance.playerObjects.Where(player => player.playerRef == playerPlaying).First().playerColor = PlayerColor.Yellow;
+                    if(NetworkManager.instance.IsServer())
+                        NetworkManager.instance.playerObjects.Where(player => player.playerRef == playerPlaying).First().playerColor = PlayerColor.Yellow;
+
                     UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
 
                 }
                 else
                 {
-                    NetworkManager.instance.playerObjects.Where(player => player.playerRef != playerPlaying).First().playerColor = PlayerColor.Red;
+                    if (NetworkManager.instance.IsServer())
+                        NetworkManager.instance.playerObjects.Where(player => player.playerRef != playerPlaying).First().playerColor = PlayerColor.Red;
+
                     UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Red);
                 }
             }
@@ -94,12 +98,16 @@ public class MyGameManager : NetworkBehaviour
             {
                 if (NetworkManager.instance.GetLocalPlayerRef() == playerPlaying)
                 {
-                    NetworkManager.instance.playerObjects.Where(player => player.playerRef == playerPlaying).First().playerColor = PlayerColor.Red;
+                    if (NetworkManager.instance.IsServer())
+                        NetworkManager.instance.playerObjects.Where(player => player.playerRef == playerPlaying).First().playerColor = PlayerColor.Red;
+
                     UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Red);
                 }
                 else
                 {
-                    NetworkManager.instance.playerObjects.Where(player => player.playerRef != playerPlaying).First().playerColor = PlayerColor.Yellow;
+                    if (NetworkManager.instance.IsServer())
+                        NetworkManager.instance.playerObjects.Where(player => player.playerRef != playerPlaying).First().playerColor = PlayerColor.Yellow;
+
                     UIManager.instance.DisplayPlayerColorMarker(PlayerColor.Yellow);
                 }
             }

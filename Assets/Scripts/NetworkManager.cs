@@ -205,7 +205,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
 
 
-
+    public bool IsServer()
+    {
+        return _runner.IsServer;
+    }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         // Find and remove the players avatar
